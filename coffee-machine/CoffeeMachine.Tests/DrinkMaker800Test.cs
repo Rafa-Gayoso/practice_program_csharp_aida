@@ -3,105 +3,43 @@ using CoffeeMachine.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace CoffeeMachine.Tests
-{
-    public class DrinkMaker800Test
-    {
-        [Test]
-        public void Serve_Coffee()
-        {
-            var drinkMaker = Substitute.For<DrinkMaker>();
-            var drinkMaker800 = new DrinkMaker800(drinkMaker);
-
-            var order = new Order()
-            {
-                Drink = DrinkType.Coffee
-            };
-
-            drinkMaker800.Serve(order);
-
-            
-            drinkMaker.Received().Execute("C::");
-        }
-
-        [Test]
-        public void Serve_Tea() {
+namespace CoffeeMachine.Tests {
+    public class DrinkMaker800Test {
+  
+        [TestCase(DrinkType.Chocolate, "H")]
+        [TestCase(DrinkType.Coffee, "C")]
+        [TestCase(DrinkType.Tea, "T")]
+        public void Serve_Drink(DrinkType drinkType, string drinkCommand) {
             var drinkMaker = Substitute.For<DrinkMaker>();
             var drinkMaker800 = new DrinkMaker800(drinkMaker);
 
             var order = new Order() {
-                Drink = DrinkType.Tea
+                Drink = drinkType
             };
 
             drinkMaker800.Serve(order);
 
 
-            drinkMaker.Received().Execute("T::");
+            drinkMaker.Received().Execute($"{drinkCommand}::");
         }
 
-        [Test]
-        public void Serve_Chocolate() {
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void Serve_drinks_With_Spoons_Of_Sugar_And_Stick(int sugar) {
             var drinkMaker = Substitute.For<DrinkMaker>();
             var drinkMaker800 = new DrinkMaker800(drinkMaker);
 
             var order = new Order() {
-                Drink = DrinkType.Chocolate
-            };
-
-            drinkMaker800.Serve(order);
-
-
-            drinkMaker.Received().Execute("H::");
-        }
-
-        [Test]
-        public void Serve_Chocolate_With_One_Spoon_Of_Sugar_And_Stick()
-        {
-            var drinkMaker = Substitute.For<DrinkMaker>();
-            var drinkMaker800 = new DrinkMaker800(drinkMaker);
-
-            var order = new Order()
-            {
                 Drink = DrinkType.Chocolate,
-                SugarSpoon = 1
+                SugarSpoon = sugar
             };
 
             drinkMaker800.Serve(order);
 
 
-            drinkMaker.Received().Execute("H:1:0");
+            drinkMaker.Received().Execute($"H:{sugar}:0");
         }
 
-        [Test]
-        public void Serve_Tea_With_two_Spoon_Of_Sugar_And_Stick() {
-            var drinkMaker = Substitute.For<DrinkMaker>();
-            var drinkMaker800 = new DrinkMaker800(drinkMaker);
-
-            var order = new Order() {
-                Drink = DrinkType.Tea,
-                SugarSpoon = 2
-            };
-
-            drinkMaker800.Serve(order);
-
-
-            drinkMaker.Received().Execute("T:2:0");
-        }
-
-        [Test]
-        public void No_Serve_Tea_With_three_Spoon_Of_Sugar_And_Stick() {
-            var drinkMaker = Substitute.For<DrinkMaker>();
-            var drinkMaker800 = new DrinkMaker800(drinkMaker);
-
-            var order = new Order() {
-                Drink = DrinkType.Tea,
-                SugarSpoon = 3
-            };
-
-            drinkMaker800.Serve(order);
-
-
-            drinkMaker.Received().Execute("T:2:0");
-        }
     }
 }
