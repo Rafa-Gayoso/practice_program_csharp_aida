@@ -41,5 +41,17 @@ namespace CoffeeMachine.Tests {
             drinkMaker.Received().Execute($"H:{sugar}:0");
         }
 
+        [Test]
+        public void Show_Message_With_Empty_order() {
+            var drinkMaker = Substitute.For<DrinkMaker>();
+            var drinkMaker800 = new DrinkMaker800(drinkMaker);
+
+            var order = new EmptyOrder();
+
+            drinkMaker800.Serve(order);
+            
+            drinkMaker.Received().Execute("M:Please, select a drink");
+        }
+
     }
 }

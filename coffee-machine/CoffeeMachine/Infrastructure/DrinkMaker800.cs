@@ -18,7 +18,11 @@ namespace CoffeeMachine.Infrastructure {
         }
 
         public void Serve(Order order) {
-            var command = GetCommand(order);
+            var command = "M:Please, select a drink";
+
+            if (order.GetType() == typeof(Order)) {
+                command = GetCommand(order);
+            }
 
             _drinkMaker.Execute(command);
         }
