@@ -22,4 +22,10 @@ public class CoffeeMachine
     {
         _drinkMakerDriver.Serve(_order);
     }
+
+    public void SelectTea() {
+        _order = new Order() {
+            Drink = "Tea"
+        };
+    }
 }
