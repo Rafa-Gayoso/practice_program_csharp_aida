@@ -6,6 +6,7 @@ namespace CoffeeMachine.Infrastructure
 {
     public class DrinkMaker800 : DrinkMakerDriver
     {
+        private const int MaxSugarSpoon = 2;
         private readonly DrinkMaker _drinkMaker;
         private readonly Dictionary<DrinkType, string> _drinkDictionary;
 
@@ -30,9 +31,14 @@ namespace CoffeeMachine.Infrastructure
 
         private string GetCommand(Order order)
         {
-            var sugarSpoon = order.SugarSpoon == 0 ? string.Empty : order.SugarSpoon.ToString();
+            var sugarSpoon = GetSugarSpoon(order);
             var stick = order.SugarSpoon > 0 ? "0" : string.Empty;
             return $"{_drinkDictionary.GetValueOrDefault(order.Drink)}:{sugarSpoon}:{stick}";
+        }
+
+        private static string GetSugarSpoon(Order order) {
+            if (order.SugarSpoon == 0) return string.Empty;
+            return order.SugarSpoon > MaxSugarSpoon ? MaxSugarSpoon.ToString() : order.SugarSpoon.ToString();
         }
     }
 }

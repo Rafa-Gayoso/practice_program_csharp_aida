@@ -87,5 +87,21 @@ namespace CoffeeMachine.Tests
 
             _drinkMakerDriver.Received().Serve(order);
         }
+
+        [Test]
+        public void Serve_Chocolate_With_two_Spoon_Of_Sugar_And_Stick() {
+            var order = new Order() {
+                Drink = DrinkType.Chocolate,
+                SugarSpoon = 2
+            };
+
+            _coffeeMachine.SelectChocolate();
+            _coffeeMachine.AddOneSpoonOfSugar();
+            _coffeeMachine.AddOneSpoonOfSugar();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
+        }
+
     }
 }
