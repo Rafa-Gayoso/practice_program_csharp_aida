@@ -21,7 +21,7 @@ namespace CoffeeMachine.Tests
         {
             var order = new Order()
             {
-                Drink = "Coffee"
+                Drink = DrinkType.Coffee
             };
 
             _coffeeMachine.SelectCoffee();
@@ -34,7 +34,7 @@ namespace CoffeeMachine.Tests
         public void Serve_Tea() {
             var order = new Order()
             {
-                Drink = "Tea"
+                Drink = DrinkType.Tea
             };
 
             _coffeeMachine.SelectTea();
@@ -47,7 +47,7 @@ namespace CoffeeMachine.Tests
         public void Serve_Chocolate() {
             var order = new Order()
             {
-                Drink = "Chocolate"
+                Drink = DrinkType.Chocolate
             };
 
             _coffeeMachine.SelectChocolate();
@@ -61,11 +61,27 @@ namespace CoffeeMachine.Tests
         {
             var order = new Order()
             {
-                Drink = "Coffee",
+                Drink = DrinkType.Coffee,
                 SugarSpoon = 1
             };
 
             _coffeeMachine.SelectCoffee();
+            _coffeeMachine.AddOneSpoonOfSugar();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
+        }
+
+        [Test]
+        public void Serve_Chocolate_With_One_Spoon_Of_Sugar_And_Stick()
+        {
+            var order = new Order()
+            {
+                Drink = DrinkType.Chocolate,
+                SugarSpoon = 1
+            };
+
+            _coffeeMachine.SelectChocolate();
             _coffeeMachine.AddOneSpoonOfSugar();
             _coffeeMachine.MakeDrink();
 
