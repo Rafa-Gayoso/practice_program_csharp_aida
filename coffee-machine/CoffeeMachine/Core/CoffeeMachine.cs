@@ -28,4 +28,10 @@ public class CoffeeMachine
             Drink = "Tea"
         };
     }
+
+    public void SelectChocolate() {
+        _order = new Order() {
+            Drink = "Chocolate"
+        };
+    }
 }

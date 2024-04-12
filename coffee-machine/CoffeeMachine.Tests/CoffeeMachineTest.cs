@@ -35,5 +35,19 @@ namespace CoffeeMachine.Tests
             };
             drinkMakerDriver.Received().Serve(order);
         }
+
+        [Test]
+        public void Serve_Chocolate() {
+            var drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
+            var coffeeMachine = new Core.CoffeeMachine(drinkMakerDriver);
+
+            coffeeMachine.SelectChocolate();
+            coffeeMachine.MakeDrink();
+
+            var order = new Order() {
+                Drink = "Chocolate"
+            };
+            drinkMakerDriver.Received().Serve(order);
+        }
     }
 }

@@ -23,5 +23,20 @@ namespace CoffeeMachine.Tests
             
             drinkMaker.Received().Execute("C::");
         }
+
+        [Test]
+        public void Serve_Tea() {
+            var drinkMaker = Substitute.For<DrinkMaker>();
+            var drinkMaker800 = new DrinkMaker800(drinkMaker);
+
+            var order = new Order() {
+                Drink = "Tea"
+            };
+
+            drinkMaker800.Serve(order);
+
+
+            drinkMaker.Received().Execute("T::");
+        }
     }
 }
