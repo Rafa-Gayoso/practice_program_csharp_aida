@@ -19,7 +19,7 @@ namespace CoffeeMachine.Tests
         [Test]
         public void Serve_Coffee()
         {
-            var order = new Order()
+            var expectedOrder = new Order()
             {
                 Drink = DrinkType.Coffee
             };
@@ -27,12 +27,12 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.SelectCoffee();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
         [Test]
         public void Serve_Tea() {
-            var order = new Order()
+            var expectedOrder = new Order()
             {
                 Drink = DrinkType.Tea
             };
@@ -40,12 +40,12 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.SelectTea();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
         [Test]
         public void Serve_Chocolate() {
-            var order = new Order()
+            var expectedOrder = new Order()
             {
                 Drink = DrinkType.Chocolate
             };
@@ -53,13 +53,13 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.SelectChocolate();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
         [Test]
         public void Serve_Coffee_With_One_Spoon_Of_Sugar_And_Stick()
         {
-            var order = new Order()
+            var expectedOrder = new Order()
             {
                 Drink = DrinkType.Coffee,
                 SugarSpoon = 1
@@ -69,13 +69,13 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.AddOneSpoonOfSugar();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
         [Test]
         public void Serve_Chocolate_With_One_Spoon_Of_Sugar_And_Stick()
         {
-            var order = new Order()
+            var expectedOrder = new Order()
             {
                 Drink = DrinkType.Chocolate,
                 SugarSpoon = 1
@@ -85,12 +85,12 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.AddOneSpoonOfSugar();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
         [Test]
         public void No_Serve_Tea_With_three_Spoon_Of_Sugar_And_Stick() {
-            var order = new Order() {
+            var expectedOrder = new Order() {
                 Drink = DrinkType.Tea,
                 SugarSpoon = 2
             };
@@ -101,8 +101,16 @@ namespace CoffeeMachine.Tests
             _coffeeMachine.AddOneSpoonOfSugar();
             _coffeeMachine.MakeDrink();
 
-            _drinkMakerDriver.Received().Serve(order);
+            _drinkMakerDriver.Received().Serve(expectedOrder);
         }
 
+        [Test]
+        public void No_Serve_With_Empty_order() {
+            var expectedOder = new EmptyOrder();
+
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(expectedOder);
+        }
     }
 }

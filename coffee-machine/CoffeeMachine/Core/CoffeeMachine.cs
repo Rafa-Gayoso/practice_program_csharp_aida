@@ -6,19 +6,25 @@ public class CoffeeMachine {
 
     public CoffeeMachine(DrinkMakerDriver drinkMakerDriver) {
         _drinkMakerDriver = drinkMakerDriver;
-        _order = new Order();
+        _order = new EmptyOrder();
     }
 
     public void SelectCoffee() {
-        _order.Drink = DrinkType.Coffee;
+        _order = new Order() {
+            Drink = DrinkType.Coffee
+        };
     }
 
     public void SelectTea() {
-        _order.Drink = DrinkType.Tea;
+        _order = new Order() {
+            Drink = DrinkType.Tea
+        };
     }
 
     public void SelectChocolate() {
-        _order.Drink = DrinkType.Chocolate;
+        _order = new Order() {
+            Drink = DrinkType.Chocolate
+        };
     }
 
     public void AddOneSpoonOfSugar() {
