@@ -34,4 +34,13 @@ public class CoffeeMachine
             Drink = "Chocolate"
         };
     }
+
+    public void AddOneSpoonOfSugar()
+    {
+        _order = new Order()
+        {
+            Drink = "Coffee",
+            SugarSpoon = 1
+        };
+    }
 }

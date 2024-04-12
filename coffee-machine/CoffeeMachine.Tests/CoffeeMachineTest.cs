@@ -6,48 +6,70 @@ namespace CoffeeMachine.Tests
 {
     public class CoffeeMachineTest
     {
+        private DrinkMakerDriver _drinkMakerDriver;
+        private Core.CoffeeMachine _coffeeMachine;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
+            _coffeeMachine = new Core.CoffeeMachine(_drinkMakerDriver);
+        }
+
         [Test]
         public void Serve_Coffee()
         {
-            var drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
-            var coffeeMachine = new Core.CoffeeMachine(drinkMakerDriver);
-
-            coffeeMachine.SelectCoffee();
-            coffeeMachine.MakeDrink();
-
             var order = new Order()
             {
                 Drink = "Coffee"
             };
-            drinkMakerDriver.Received().Serve(order);
+
+            _coffeeMachine.SelectCoffee();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
         }
 
         [Test]
         public void Serve_Tea() {
-            var drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
-            var coffeeMachine = new Core.CoffeeMachine(drinkMakerDriver);
-
-            coffeeMachine.SelectTea();
-            coffeeMachine.MakeDrink();
-
-            var order = new Order() {
+            var order = new Order()
+            {
                 Drink = "Tea"
             };
-            drinkMakerDriver.Received().Serve(order);
+
+            _coffeeMachine.SelectTea();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
         }
 
         [Test]
         public void Serve_Chocolate() {
-            var drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
-            var coffeeMachine = new Core.CoffeeMachine(drinkMakerDriver);
-
-            coffeeMachine.SelectChocolate();
-            coffeeMachine.MakeDrink();
-
-            var order = new Order() {
+            var order = new Order()
+            {
                 Drink = "Chocolate"
             };
-            drinkMakerDriver.Received().Serve(order);
+
+            _coffeeMachine.SelectChocolate();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
+        }
+
+        [Test]
+        public void Serve_Coffee_With_One_Spoon_Of_Sugar_And_Stick()
+        {
+            var order = new Order()
+            {
+                Drink = "Coffee",
+                SugarSpoon = 1
+            };
+
+            _coffeeMachine.SelectCoffee();
+            _coffeeMachine.AddOneSpoonOfSugar();
+            _coffeeMachine.MakeDrink();
+
+            _drinkMakerDriver.Received().Serve(order);
         }
     }
 }
