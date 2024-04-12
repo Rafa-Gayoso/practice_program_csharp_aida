@@ -15,7 +15,11 @@ namespace CoffeeMachine.Tests
             coffeeMachine.SelectCoffee();
             coffeeMachine.MakeDrink();
 
-            drinkMakerDriver.Received().Serve("Coffee");
+            var order = new Order()
+            {
+                Drink = "Coffee"
+            };
+            drinkMakerDriver.Received().Serve(order);
         }
     }
 }

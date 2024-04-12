@@ -3,7 +3,7 @@ namespace CoffeeMachine.Core;
 public class CoffeeMachine
 {
     private readonly DrinkMakerDriver _drinkMakerDriver;
-    private string _drink;
+    private Order _order;
 
     public CoffeeMachine(DrinkMakerDriver drinkMakerDriver)
     {
@@ -12,11 +12,14 @@ public class CoffeeMachine
 
     public void SelectCoffee()
     {
-        _drink = "Coffee";
+        _order = new Order()
+        {
+            Drink = "Coffee"
+        };
     }
 
     public void MakeDrink()
     {
-        _drinkMakerDriver.Serve(_drink);
+        _drinkMakerDriver.Serve(_order);
     }
 }

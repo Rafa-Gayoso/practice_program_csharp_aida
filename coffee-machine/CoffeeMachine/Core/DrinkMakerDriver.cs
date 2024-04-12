@@ -2,5 +2,5 @@ namespace CoffeeMachine.Core;
 
 public interface DrinkMakerDriver
 {
-    void Serve(string drink);
+    void Serve(Order order);
 }
