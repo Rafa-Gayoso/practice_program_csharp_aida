@@ -8,7 +8,7 @@ public class CoffeeMachine
     private readonly DrinkMakerDriver _drinkMakerDriver;
     private Order _order;
     private decimal _amount;
-    private Dictionary<DrinkType, decimal> _drinkTypesPrices;
+    private readonly Dictionary<DrinkType, decimal> _drinkTypesPrices;
 
     public CoffeeMachine(DrinkMakerDriver drinkMakerDriver)
     {
