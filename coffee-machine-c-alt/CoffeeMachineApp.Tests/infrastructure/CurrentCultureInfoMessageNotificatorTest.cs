@@ -5,9 +5,8 @@ using NUnit.Framework;
 
 namespace CoffeeMachineApp.Tests.infrastructure
 {
-    public class CurrentCultureInfoMessageNotificatorTest
+    public abstract class CurrentCultureInfoMessageNotificatorTest
     {
-        private const string SelectDrinkMessage = "Please, select a drink!";
         private CurrentCultureInfoMessageNotificator _messageNotificator;
         private DrinkMakerDriver _drinkMakerDriver;
 
@@ -24,7 +23,7 @@ namespace CoffeeMachineApp.Tests.infrastructure
 
             _messageNotificator.NotifySelectDrink();
 
-            _drinkMakerDriver.Received().Notify(Message.Create(SelectDrinkMessage));
+            _drinkMakerDriver.Received().Notify(GetSelectDrinkMessage());
         }
 
         [Test]
@@ -35,7 +34,11 @@ namespace CoffeeMachineApp.Tests.infrastructure
 
             _messageNotificator.NotifyMissingAmount(missingAmount);
 
-            _drinkMakerDriver.Received().Notify(Message.Create($"You are missing {missingAmount}"));
+            _drinkMakerDriver.Received().Notify(GetNotEnoughMoneyMessage(missingAmount));
         }
+
+        protected abstract Message GetNotEnoughMoneyMessage(decimal missingAmount);
+
+        protected abstract Message GetSelectDrinkMessage();
     }
 }

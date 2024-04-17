@@ -18,12 +18,12 @@ public class CurrentCultureInfoMessageNotificator : MessageNotificator
 
     public void NotifyMissingAmount(decimal missingMoney)
     {
-        _drinkMakerDriver.Notify(Message.Create($"You are missing {missingMoney}"));
+        _drinkMakerDriver.Notify(Message.Create($"Le faltan {missingMoney}"));
     }
 
     private Message ComposeSelectDrinkMessage()
     {
-        const string message = "Please, select a drink!";
+        const string message = "Por favor, seleccione una bebida!";
         return Message.Create(message);
     }
 }
