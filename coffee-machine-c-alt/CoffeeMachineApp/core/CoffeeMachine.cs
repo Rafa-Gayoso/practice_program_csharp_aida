@@ -11,22 +11,13 @@ public class CoffeeMachine
     private readonly MessageNotificator _messageNotificator;
 
 
-    public CoffeeMachine(DrinkMakerDriver drinkMakerDriver, Dictionary<DrinkType, decimal> prices, MessageNotificator messageNotificator)
+    public CoffeeMachine(DrinkMakerDriver drinkMakerDriver, Dictionary<DrinkType, decimal> prices,
+        MessageNotificator messageNotificator)
     {
         _drinkMakerDriver = drinkMakerDriver;
         _prices = prices;
         InitializeState();
         _messageNotificator = messageNotificator;
-    }
-
-    public DrinkMakerDriver DrinkMakerDriver
-    {
-        get { return _drinkMakerDriver; }
-    }
-
-    public DrinkMakerDriver DrinkMakerDriver1
-    {
-        get { return _drinkMakerDriver; }
     }
 
     public void SelectChocolate()
