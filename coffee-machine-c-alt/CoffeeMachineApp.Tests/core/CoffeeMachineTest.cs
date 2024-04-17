@@ -28,7 +28,6 @@ public class CoffeeMachineTest
             { DrinkType.Coffee, CoffeePrice },
             { DrinkType.Tea, TeaPrice }
         };
-        new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
         _messageNotificator = Substitute.For<MessageNotificator>();
     }
 
