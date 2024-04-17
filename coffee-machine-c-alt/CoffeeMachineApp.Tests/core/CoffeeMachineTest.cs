@@ -10,13 +10,11 @@ namespace CoffeeMachineApp.Tests.core;
 
 public class CoffeeMachineTest
 {
-    private const string SelectDrinkMessage = "Please, select a drink!";
     private const decimal TeaPrice = 0.4m;
     private const decimal CoffeePrice = 0.6m;
     private const decimal ChocolatePrice = 0.5m;
     private CoffeeMachine _coffeeMachine;
     private DrinkMakerDriver _drinkMakerDriver;
-    private CurrentCultureInfoMessageNotificator _messageNotificatorCultureInfo;
     private MessageNotificator _messageNotificator;
     private Dictionary<DrinkType, decimal> _pricesByDrinkType;
 
@@ -30,7 +28,7 @@ public class CoffeeMachineTest
             { DrinkType.Coffee, CoffeePrice },
             { DrinkType.Tea, TeaPrice }
         };
-        _messageNotificatorCultureInfo = new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
+        new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
         _messageNotificator = Substitute.For<MessageNotificator>();
     }
 
@@ -149,7 +147,7 @@ public class CoffeeMachineTest
         _coffeeMachine.AddMoney(amount);
         _coffeeMachine.MakeDrink();
 
-        _drinkMakerDriver.Received().Notify(Message.Create($"You are missing {TeaPrice - amount}"));
+        _messageNotificator.Received().NotifyMissingAmount(TeaPrice - amount);
     }
 
     [Test]
@@ -162,7 +160,7 @@ public class CoffeeMachineTest
         _coffeeMachine.AddMoney(amount);
         _coffeeMachine.MakeDrink();
 
-        _drinkMakerDriver.Received().Notify(Message.Create($"You are missing {CoffeePrice - amount}"));
+        _messageNotificator.Received().NotifyMissingAmount(CoffeePrice - amount);
     }
 
     [Test]
@@ -175,7 +173,8 @@ public class CoffeeMachineTest
         _coffeeMachine.AddMoney(amount);
         _coffeeMachine.MakeDrink();
 
-        _drinkMakerDriver.Received().Notify(Message.Create($"You are missing {ChocolatePrice - amount}"));
+
+        _messageNotificator.Received().NotifyMissingAmount(ChocolatePrice - amount);
     }
     
     [Test]
@@ -199,7 +198,7 @@ public class CoffeeMachineTest
         _coffeeMachine.SelectTea();
         _coffeeMachine.MakeDrink();
 
-        _drinkMakerDriver.Received().Notify(Message.Create($"You are missing {TeaPrice}"));
+        _messageNotificator.Received().NotifyMissingAmount(TeaPrice);
     }
 
     private void AfterPayingAndMakingDrink()
@@ -224,7 +223,7 @@ public class CoffeeMachineTest
     private CoffeeMachine PaidCoffeeMachine()
     {
         var prices = _pricesByDrinkType;
-        return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificatorCultureInfo);
+        return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificator);
     }
 
     private List<Order> CaptureSentOrders()
