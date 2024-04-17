@@ -17,6 +17,7 @@ public class CoffeeMachineTest
     private CoffeeMachine _coffeeMachine;
     private DrinkMakerDriver _drinkMakerDriver;
     private CurrentCultureInfoMessageNotificator _messageNotificatorCultureInfo;
+    private MessageNotificator _messageNotificator;
     private Dictionary<DrinkType, decimal> _pricesByDrinkType;
 
     [SetUp]
@@ -30,6 +31,7 @@ public class CoffeeMachineTest
             { DrinkType.Tea, TeaPrice }
         };
         _messageNotificatorCultureInfo = new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
+        _messageNotificator = Substitute.For<MessageNotificator>();
     }
 
     [Test]
@@ -108,10 +110,10 @@ public class CoffeeMachineTest
     public void Warns_The_User_When_No_Drink_Was_Selected()
     {
         _coffeeMachine = FreeCoffeeMachine();
-
+        
         _coffeeMachine.MakeDrink();
 
-        _drinkMakerDriver.Received().Notify(Message.Create(SelectDrinkMessage));
+        _messageNotificator.Received(1).NotifySelectDrink();
     }
 
     [Test]
@@ -122,7 +124,7 @@ public class CoffeeMachineTest
         _coffeeMachine.MakeDrink();
 
         _drinkMakerDriver.Received(1).Send(Arg.Any<Order>());
-        _drinkMakerDriver.Received().Notify(Message.Create(SelectDrinkMessage));
+        _messageNotificator.Received(1).NotifySelectDrink();
     }
 
     [Test]
@@ -216,7 +218,7 @@ public class CoffeeMachineTest
             { DrinkType.Coffee, 0 },
             { DrinkType.Tea, 0 }
         };
-         return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificatorCultureInfo);
+         return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificator);
     }
 
     private CoffeeMachine PaidCoffeeMachine()
