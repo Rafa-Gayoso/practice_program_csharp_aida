@@ -15,6 +15,7 @@ public class CoffeeMachineTest
     private const decimal ChocolatePrice = 0.5m;
     private CoffeeMachine _coffeeMachine;
     private DrinkMakerDriver _drinkMakerDriver;
+    private MessageNotificator _messageNotificator;
     private Dictionary<DrinkType, decimal> _pricesByDrinkType;
 
     [SetUp]
@@ -27,6 +28,7 @@ public class CoffeeMachineTest
             { DrinkType.Coffee, CoffeePrice },
             { DrinkType.Tea, TeaPrice }
         };
+        _messageNotificator = new MessageNotificator(_drinkMakerDriver);
     }
 
     [Test]
@@ -213,12 +215,13 @@ public class CoffeeMachineTest
             { DrinkType.Coffee, 0 },
             { DrinkType.Tea, 0 }
         };
-         return new CoffeeMachine(_drinkMakerDriver, prices);
+         return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificator);
     }
+
     private CoffeeMachine PaidCoffeeMachine()
     {
         var prices = _pricesByDrinkType;
-        return new CoffeeMachine(_drinkMakerDriver, prices);
+        return new CoffeeMachine(_drinkMakerDriver, prices, _messageNotificator);
     }
 
     private List<Order> CaptureSentOrders()
