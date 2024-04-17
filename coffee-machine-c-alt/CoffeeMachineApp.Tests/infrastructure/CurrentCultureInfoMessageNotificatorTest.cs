@@ -8,7 +8,7 @@ namespace CoffeeMachineApp.Tests.infrastructure
     public abstract class CurrentCultureInfoMessageNotificatorTest
     {
         private CurrentCultureInfoMessageNotificator _messageNotificator;
-        private DrinkMakerDriver _drinkMakerDriver;
+        protected DrinkMakerDriver _drinkMakerDriver;
 
         [SetUp]
         public void SetUp()
@@ -19,7 +19,7 @@ namespace CoffeeMachineApp.Tests.infrastructure
         [Test]
         public void Warns_The_User_When_No_Drink_Was_Selected()
         {
-            _messageNotificator = new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
+            _messageNotificator = CreateMessageNotificator();
 
             _messageNotificator.NotifySelectDrink();
 
@@ -30,7 +30,7 @@ namespace CoffeeMachineApp.Tests.infrastructure
         public void Warns_The_User_When_No_Enough_Money()
         {
             var missingAmount = 0.3m;
-            _messageNotificator = new CurrentCultureInfoMessageNotificator(_drinkMakerDriver);
+            _messageNotificator = CreateMessageNotificator();
 
             _messageNotificator.NotifyMissingAmount(missingAmount);
 
@@ -40,5 +40,7 @@ namespace CoffeeMachineApp.Tests.infrastructure
         protected abstract Message GetNotEnoughMoneyMessage(decimal missingAmount);
 
         protected abstract Message GetSelectDrinkMessage();
+
+        protected abstract CurrentCultureInfoMessageNotificator CreateMessageNotificator();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CoffeeMachineApp.core;
 using System.Globalization;
+using CoffeeMachineApp.infrastructure;
 
 namespace CoffeeMachineApp.Tests.infrastructure
 {
@@ -18,6 +19,9 @@ namespace CoffeeMachineApp.Tests.infrastructure
             return Message.Create(SelectDrinkMessage);
         }
 
-        
+        protected override CurrentCultureInfoMessageNotificator CreateMessageNotificator()
+        {
+            return new CurrentCultureInfoMessageNotificator(base._drinkMakerDriver, new CultureInfo("es-ES"));
+        }
     }
 }
