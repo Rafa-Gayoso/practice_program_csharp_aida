@@ -1,4 +1,6 @@
-namespace CoffeeMachineApp.core;
+using CoffeeMachineApp.core;
+
+namespace CoffeeMachineApp.infrastructure;
 
 public class CurrentCultureInfoMessageNotificator : MessageNotificator
 {
