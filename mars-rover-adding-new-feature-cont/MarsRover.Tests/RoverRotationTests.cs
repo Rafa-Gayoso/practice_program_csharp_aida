@@ -8,80 +8,80 @@ public class RoverRotationTests
     [Test]
     public void Facing_North_Rotate_Left()
     {
-        var rover = CreateRoverAtInitialFacingTo("N");
+        var rover = AnyRoverFacing("N");
 
         rover.Receive("l");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("W")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("W")));
     }
 
     [Test]
     public void Facing_North_Rotate_Right()
     {
-        var rover = CreateRoverAtInitialFacingTo("N");
+        var rover = AnyRoverFacing("N");
 
         rover.Receive("r");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("E")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("E")));
     }
 
     [Test]
     public void Facing_South_Rotate_Left()
     {
-        var rover = CreateRoverAtInitialFacingTo("S");
+        var rover = AnyRoverFacing("S");
 
         rover.Receive("l");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("E")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("E")));
     }
 
     [Test]
     public void Facing_South_Rotate_Right()
     {
-        var rover = CreateRoverAtInitialFacingTo("S");
+        var rover = AnyRoverFacing("S");
 
         rover.Receive("r");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("W")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("W")));
     }
 
     [Test]
     public void Facing_West_Rotate_Left()
     {
-        var rover = CreateRoverAtInitialFacingTo("W");
+        var rover = AnyRoverFacing("W");
 
         rover.Receive("l");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("S")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("S")));
     }
 
     [Test]
     public void Facing_West_Rotate_Right()
     {
-        var rover = CreateRoverAtInitialFacingTo("W");
+        var rover = AnyRoverFacing("W");
 
         rover.Receive("r");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("N")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("N")));
     }
 
     [Test]
     public void Facing_East_Rotate_Left()
     {
-        var rover = CreateRoverAtInitialFacingTo("E");
+        var rover = AnyRoverFacing("E");
 
         rover.Receive("l");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("N")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("N")));
     }
 
     [Test]
     public void Facing_East_Rotate_Right()
     {
-        var rover = CreateRoverAtInitialFacingTo("E");
+        var rover = AnyRoverFacing("E");
 
         rover.Receive("r");
 
-        Assert.That(rover, Is.EqualTo(CreateRoverAtInitialFacingTo("S")));
+        Assert.That(rover, Is.EqualTo(AnyRoverFacing("S")));
     }
 }

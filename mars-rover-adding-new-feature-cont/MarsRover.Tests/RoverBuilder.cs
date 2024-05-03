@@ -2,17 +2,18 @@
 
 internal class RoverBuilder
 {
-    private string _direction = "N";
-    private int _axisY = 0;
-    private int _axisX = 0;
+    private string _direction;
+    private int _axisY;
+    private int _axisX;
 
-    public RoverBuilder FacingNorth()
+    private RoverBuilder(int x, int y, string direction)
     {
-        _direction = "N";
-        return this;
+        _axisX = x;
+        _axisY = y;
+        _direction = direction;
     }
 
-    public RoverBuilder WithDirection(string direction)
+    public RoverBuilder Facing(string direction)
     {
         _direction = direction;
         return this;
@@ -32,11 +33,11 @@ internal class RoverBuilder
 
     public static RoverBuilder ARover()
     {
-        return new RoverBuilder();
+        return new RoverBuilder(0,0,"N");
     }
 
-    public static Rover CreateRoverAtInitialFacingTo(string direction)
+    public static Rover AnyRoverFacing(string direction)
     {
-        return ARover().WithDirection(direction).Build();
+        return ARover().Facing(direction).Build();
     }
 }
