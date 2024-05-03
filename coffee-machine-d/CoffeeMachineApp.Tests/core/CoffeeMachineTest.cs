@@ -15,19 +15,12 @@ public class CoffeeMachineTest
     private CoffeeMachine _coffeeMachine;
     private DrinkMakerDriver _drinkMakerDriver;
     private Notifier _notifier;
-    private Dictionary<DrinkType, decimal> _pricesByDrinkType;
 
     [SetUp]
     public void SetUp()
     {
         _drinkMakerDriver = Substitute.For<DrinkMakerDriver>();
         _notifier = Substitute.For<Notifier>();
-        _pricesByDrinkType = new Dictionary<DrinkType, decimal>()
-        {
-            { DrinkType.Chocolate, ChocolatePrice },
-            { DrinkType.Coffee, CoffeePrice },
-            { DrinkType.Tea, TeaPrice }
-        };
     }
 
     [Test]
