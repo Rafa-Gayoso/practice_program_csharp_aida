@@ -22,7 +22,8 @@ public class RoverReceivingCommandsListTests
 
         rover.Receive("lf");
 
-        Assert.That(rover, Is.EqualTo(ARover().WithCoordinates(-1,0).WithDirection("W").Build()));
+        var expected = ARover().WithCoordinates(-1,0).WithDirection("W").Build();
+        Assert.That(rover, Is.EqualTo(expected));
     }
 
     [Test]
