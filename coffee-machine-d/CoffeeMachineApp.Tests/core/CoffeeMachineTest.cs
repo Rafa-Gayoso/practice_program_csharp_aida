@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using CoffeeMachineApp.core;
-using CoffeeMachineApp.infrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using static CoffeeMachineApp.Tests.helpers.OrderBuilder;
 
 namespace CoffeeMachineApp.Tests.core;
@@ -210,22 +208,19 @@ public class CoffeeMachineTest
 
     private CoffeeMachine FreeCoffeeMachine()
     {
-        var prices = new Dictionary<DrinkType, decimal>()
-        {
-            { DrinkType.Chocolate, 0 },
-            { DrinkType.Coffee, 0 },
-            { DrinkType.Tea, 0 },
-            { DrinkType.None, 0 }
-        };
-        
-        return new CoffeeMachine(_drinkMakerDriver, _notifier, new InMemoryDrinkPrices(prices));
+        var drinkPrices = Substitute.For<DrinkPrices>();
+        drinkPrices.GetDrinkTypePrice(Arg.Any<DrinkType>()).Returns(0);
+        return new CoffeeMachine(_drinkMakerDriver, _notifier, drinkPrices);
     }
 
-    private CoffeeMachine PaidCoffeeMachine() 
+    private CoffeeMachine PaidCoffeeMachine()
     {
-        var prices = _pricesByDrinkType;
-
-        return new CoffeeMachine(_drinkMakerDriver, _notifier, new InMemoryDrinkPrices(prices));
+        var drinkPrices = Substitute.For<DrinkPrices>();
+        drinkPrices.GetDrinkTypePrice(DrinkType.None).Returns(0);
+        drinkPrices.GetDrinkTypePrice(DrinkType.Chocolate).Returns(ChocolatePrice);
+        drinkPrices.GetDrinkTypePrice(DrinkType.Coffee).Returns(CoffeePrice);
+        drinkPrices.GetDrinkTypePrice(DrinkType.Tea).Returns(TeaPrice);
+        return new CoffeeMachine(_drinkMakerDriver, _notifier, drinkPrices);
     }
 
     private List<Order> CaptureSentOrders()
