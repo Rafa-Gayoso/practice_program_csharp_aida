@@ -1,21 +1,21 @@
-using System.Collections.Generic;
+using CoffeeMachineApp.infrastructure;
 
 namespace CoffeeMachineApp.core;
 
 public class CoffeeMachine
 {
     private readonly DrinkMakerDriver _drinkMakerDriver;
-    private readonly Dictionary<DrinkType, decimal> _prices;
     private readonly Notifier _notifier;
     private Order _order;
     private decimal _totalMoney;
+    private readonly DrinkPrices _drinkPrices;
 
-    public CoffeeMachine(DrinkMakerDriver drinkMakerDriver, Dictionary<DrinkType, decimal> prices,
-        Notifier notifier)
+    public CoffeeMachine(DrinkMakerDriver drinkMakerDriver,
+        Notifier notifier, DrinkPrices inMemoryDrinkPrices)
     {
         _drinkMakerDriver = drinkMakerDriver;
-        _prices = prices;
         _notifier = notifier;
+        _drinkPrices = inMemoryDrinkPrices;
         InitializeState();
     }
 
@@ -71,12 +71,12 @@ public class CoffeeMachine
 
     private decimal ComputeMissingMoney()
     {
-        return _prices[_order.GetDrinkType()] - _totalMoney;
+        return _drinkPrices.GetDrinkTypePrice(_order.GetDrinkType()) - _totalMoney;
     }
 
     private bool IsThereEnoughMoney()
     {
-        return _totalMoney >= _prices[_order.GetDrinkType()];
+        return _totalMoney >= _drinkPrices.GetDrinkTypePrice(_order.GetDrinkType());
     }
 
     private bool NoDrinkWasSelected()
