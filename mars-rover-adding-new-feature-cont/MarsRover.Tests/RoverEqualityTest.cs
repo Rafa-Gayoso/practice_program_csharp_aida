@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using static MarsRover.Tests.RoverBuilder;
 
 namespace MarsRover.Tests;
 
@@ -7,31 +8,33 @@ public class RoverEqualityTest
     [Test]
     public void Equal_Rovers()
     {
-        Assert.That(RoverFacing("N"), Is.EqualTo(RoverFacing("N")));
+        Assert.That(
+            ARover().Facing("N").WithCoordinates(1, 1).Build(),
+            Is.EqualTo(ARover().Facing("N").WithCoordinates(1, 1).Build()));
     }
-
 
     [Test]
     public void Not_Equal_Rovers()
     {
-        Assert.That(RoverFacing("N"), Is.Not.EqualTo(new Rover(1, 1, "S")));
-        Assert.That(RoverFacing("N"), Is.Not.EqualTo(new Rover(1, 2, "N")));
-        Assert.That(RoverFacing("N"), Is.Not.EqualTo(new Rover(0, 1, "N")));
+        Assert.That(
+            ARover().Facing("N").WithCoordinates(1, 1).Build(),
+            Is.Not.EqualTo(ARover().Facing("S").Build()));
+
+        Assert.That(
+            ARover().Facing("N").WithCoordinates(1, 1).Build(),
+            Is.Not.EqualTo(ARover().Facing("N").WithCoordinates(1, 2).Build()));
+
+        Assert.That(
+            ARover().Facing("N").WithCoordinates(1, 1).Build(),
+            Is.Not.EqualTo(ARover().Facing("N").WithCoordinates(0, 1).Build()));
     }
-
-    private Rover RoverFacing(string direction)
-    {
-        return RoverBuilder.ARover().Facing(direction).Build();
-    }
-
-
 }
 
 internal class RoverBuilder
 {
     private string direction = string.Empty;
-    private int x = 1;
-    private int y = 1;
+    private int x = 0;
+    private int y = 0;
 
     public static RoverBuilder ARover()
     {
@@ -44,8 +47,21 @@ internal class RoverBuilder
         return this;
     }
 
+    public RoverBuilder WithCoordinates(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
     public Rover Build()
     {
         return new Rover(x, y, direction);
     }
+
+    public static Rover RoverFacing(string direction)
+    {
+        return ARover().Facing(direction).Build();
+    }
+
 }
