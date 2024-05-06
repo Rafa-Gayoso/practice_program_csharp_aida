@@ -10,7 +10,7 @@ public class RoverEqualityTest
     [SetUp]
     public void Initialize()
     {
-        _roverFacingNorth = ARover().Facing("N").WithCoordinates(1, 1);
+        _roverFacingNorth = ARover().FacingNorth().WithCoordinates(1, 1);
     }
 
     [Test]
@@ -24,14 +24,14 @@ public class RoverEqualityTest
     {
         Assert.That(
             _roverFacingNorth.Build(),
-            Is.Not.EqualTo(ARover().Facing("S").Build()));
+            Is.Not.EqualTo(ARover().FacingSouth().Build()));
 
         Assert.That(
             _roverFacingNorth.Build(),
-            Is.Not.EqualTo(ARover().Facing("N").WithCoordinates(1, 2).Build()));
+            Is.Not.EqualTo(ARover().FacingNorth().WithCoordinates(1, 2).Build()));
 
         Assert.That(
             _roverFacingNorth.Build(),
-            Is.Not.EqualTo(ARover().Facing("N").WithCoordinates(0, 1).Build()));
+            Is.Not.EqualTo(ARover().FacingNorth().WithCoordinates(0, 1).Build()));
     }
 }

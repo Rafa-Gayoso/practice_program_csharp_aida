@@ -1,6 +1,6 @@
 namespace MarsRover.Tests;
 
-public class RoverBuilder
+internal class RoverBuilder
 {
     private string direction = string.Empty;
     private int x = 0;
@@ -14,6 +14,29 @@ public class RoverBuilder
     public RoverBuilder Facing(string direction)
     {
         this.direction = direction;
+        return this;
+    }
+    public RoverBuilder FacingNorth()
+    {
+        direction = "N";
+        return this;
+    }
+
+    public RoverBuilder FacingSouth()
+    {
+        direction = "S";
+        return this;
+    }
+
+    public RoverBuilder FacingEast()
+    {
+        direction = "E";
+        return this;
+    }
+
+    public RoverBuilder FacingWest()
+    {
+        direction = "W";
         return this;
     }
 
@@ -34,4 +57,5 @@ public class RoverBuilder
         return ARover().Facing(direction).Build();
     }
 
+    
 }
