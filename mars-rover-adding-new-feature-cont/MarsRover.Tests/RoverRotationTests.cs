@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using static MarsRover.Tests.RoverBuilder;
+using static MarsRover.Tests.NasaRoverBuilder;
 
 namespace MarsRover.Tests;
 

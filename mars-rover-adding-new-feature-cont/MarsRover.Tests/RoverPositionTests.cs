@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using MarsRover.commands;
+using NSubstitute;
 using NUnit.Framework;
-using static MarsRover.Tests.RoverBuilder;
+using static MarsRover.Tests.NasaRoverBuilder;
 
 namespace MarsRover.Tests;
 
@@ -8,12 +11,13 @@ public class RoverPositionTests
     [Test]
     public void Facing_North_Move_Forward()
     {
-         
-        var rover = ARover().FacingNorth().WithCoordinates(0,0).Build();
+        var protocol = NSubstitute.Substitute.For<CommunicationProtocol>();
+        protocol.CreateCommands("f", 1).Returns(new List<Command> { new MovementForward(1) });
+        var rover = ARover().FacingNorth().WithCoordinates(0,0).Build(protocol);
 
         rover.Receive("f");
 
-        Assert.That(rover, Is.EqualTo(ARover().FacingNorth().WithCoordinates(0,1).Build()));
+        Assert.That(rover, Is.EqualTo(ARover().FacingNorth().WithCoordinates(0,1).Build(protocol)));
     }
 
     [Test]

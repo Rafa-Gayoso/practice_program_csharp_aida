@@ -1,46 +1,46 @@
 namespace MarsRover.Tests;
 
-internal class RoverBuilder
+internal class NasaRoverBuilder
 {
     private string direction = string.Empty;
     private int x = 0;
     private int y = 0;
 
-    public static RoverBuilder ARover()
+    public static NasaRoverBuilder ARover()
     {
-        return new RoverBuilder();
+        return new NasaRoverBuilder();
     }
 
-    public RoverBuilder Facing(string direction)
+    public NasaRoverBuilder Facing(string direction)
     {
         this.direction = direction;
         return this;
     }
-    public RoverBuilder FacingNorth()
+    public NasaRoverBuilder FacingNorth()
     {
         direction = "N";
         return this;
     }
 
-    public RoverBuilder FacingSouth()
+    public NasaRoverBuilder FacingSouth()
     {
         direction = "S";
         return this;
     }
 
-    public RoverBuilder FacingEast()
+    public NasaRoverBuilder FacingEast()
     {
         direction = "E";
         return this;
     }
 
-    public RoverBuilder FacingWest()
+    public NasaRoverBuilder FacingWest()
     {
         direction = "W";
         return this;
     }
 
-    public RoverBuilder WithCoordinates(int x, int y)
+    public NasaRoverBuilder WithCoordinates(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -50,6 +50,11 @@ internal class RoverBuilder
     public Rover Build()
     {
         return new Rover(x, y, direction);
+    }
+
+    public Rover Build(CommunicationProtocol communicationProtocol)
+    {
+        return new Rover(x, y, direction, communicationProtocol);
     }
 
     public static Rover RoverFacing(string direction)
