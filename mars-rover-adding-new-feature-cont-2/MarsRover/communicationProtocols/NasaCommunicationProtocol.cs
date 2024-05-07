@@ -6,10 +6,16 @@ namespace MarsRover.communicationProtocols;
 
 public class NasaCommunicationProtocol : CommunicationProtocol
 {
+    private OneCharSeparatorCommandInterpreter _commandGenerator;
+
+    public NasaCommunicationProtocol()
+    {
+        _commandGenerator = new OneCharSeparatorCommandInterpreter();
+    }
+
     public List<Command> CreateCommands(string commandsSequence, int displacement)
     {
-        return commandsSequence
-            .Select(char.ToString)
+        return _commandGenerator.GetCommands(commandsSequence)
             .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
             .ToList();
     }
@@ -28,4 +34,5 @@ public class NasaCommunicationProtocol : CommunicationProtocol
                 return new MovementBackward(displacement);
         }
     }
+
 }
