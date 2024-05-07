@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MarsRover.communicationProtocols;
+namespace MarsRover.commandInterpreters;
 
-public class OneCharSeparatorCommandInterpreter
+public class OneCharSeparatorCommandInterpreter : CommandInterpreter
 {
     public IEnumerable<string> GetCommands(string commandsSequence)
     {

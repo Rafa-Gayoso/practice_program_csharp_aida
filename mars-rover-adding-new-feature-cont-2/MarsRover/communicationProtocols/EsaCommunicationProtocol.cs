@@ -6,16 +6,16 @@ namespace MarsRover.communicationProtocols;
 
 public class EsaCommunicationProtocol : CommunicationProtocol
 {
-    private OneCharSeparatorCommandInterpreter _commandGenerator;
+    private CommandInterpreter _commandInterpreter;
 
-    public EsaCommunicationProtocol()
+    public EsaCommunicationProtocol(CommandInterpreter commandInterpreter)
     {
-        _commandGenerator = new OneCharSeparatorCommandInterpreter();
+        _commandInterpreter = commandInterpreter;
     }
 
     public List<Command> CreateCommands(string commandsSequence, int displacement)
     {
-        return _commandGenerator.GetCommands(commandsSequence)
+        return _commandInterpreter.GetCommands(commandsSequence)
             .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
             .ToList();
     }

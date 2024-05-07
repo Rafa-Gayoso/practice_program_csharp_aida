@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace MarsRover.communicationProtocols;
+namespace MarsRover;
 
-public interface CommandGenerator
+public interface CommandInterpreter
 {
     IEnumerable<string> GetCommands(string commandsSequence);
 }
