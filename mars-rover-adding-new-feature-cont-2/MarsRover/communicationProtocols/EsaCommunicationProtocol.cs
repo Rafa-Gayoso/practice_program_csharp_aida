@@ -4,27 +4,20 @@ using MarsRover.commands;
 
 namespace MarsRover.communicationProtocols;
 
-public class EsaCommunicationProtocol : CommunicationProtocol
+public class EsaCommunicationProtocol : CommunicationProtocolBase
 {
-    public List<Command> CreateCommands(string commandsSequence, int displacement)
+    protected override Command CreateCommand(int displacement, string commandRepresentation)
     {
-        return commandsSequence.Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
-            .ToList();
-    }
-
-    private Command CreateCommand(int displacement, char commandRepresentation)
-    {
-        Command command;
-        if (commandRepresentation == 'b')
-            command = new MovementForward(displacement);
-        else if (commandRepresentation == 'x')
-            command = new MovementBackward(displacement);
-
-        else if (commandRepresentation == 'f')
-            command = new RotationLeft();
-        else
-            command = new RotationRight();
-
-        return command;
+        switch (commandRepresentation)
+        {
+            case "b":
+                return new MovementForward(displacement);
+            case "x":
+                return new MovementBackward(displacement);
+            case "f":
+                return new RotationLeft();
+            default:
+                return new RotationRight();
+        }
     }
 }

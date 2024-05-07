@@ -4,12 +4,12 @@ namespace MarsRover.Tests;
 
 public class RoverBuilder
 {
-    private readonly CommunicationProtocol _communicationProtocol;
+    private readonly CommunicationProtocolBase _communicationProtocol;
     private string _direction;
     private int _x;
     private int _y;
 
-    private RoverBuilder(int x, int y, string direction, CommunicationProtocol communicationProtocol)
+    private RoverBuilder(int x, int y, string direction, CommunicationProtocolBase communicationProtocol)
     {
         _x = x;
         _y = y;

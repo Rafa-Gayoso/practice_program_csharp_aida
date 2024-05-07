@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using MarsRover.communicationProtocols;
 
 namespace MarsRover;
 
 public class Rover
 {
     private const int Displacement = 1;
-    private readonly CommunicationProtocol _communicationProtocol;
+    private readonly CommunicationProtocolBase _communicationProtocol;
     private Location _location;
 
-    public Rover(int x, int y, string direction, CommunicationProtocol communicationProtocol)
+    public Rover(int x, int y, string direction, CommunicationProtocolBase communicationProtocol)
     {
         _location = new Location(DirectionMapper.Create(direction), new Coordinates(x, y));
         _communicationProtocol = communicationProtocol;
