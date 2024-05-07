@@ -6,25 +6,32 @@ namespace MarsRover.communicationProtocols;
 
 public class EsaCommunicationProtocol : CommunicationProtocol
 {
+    private OneCharSeparatorCommandInterpreter _commandGenerator;
+
+    public EsaCommunicationProtocol()
+    {
+        _commandGenerator = new OneCharSeparatorCommandInterpreter();
+    }
+
     public List<Command> CreateCommands(string commandsSequence, int displacement)
     {
-        return commandsSequence.Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
+        return _commandGenerator.GetCommands(commandsSequence)
+            .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
             .ToList();
     }
 
-    private Command CreateCommand(int displacement, char commandRepresentation)
+    private Command CreateCommand(int displacement, string commandRepresentation)
     {
-        Command command;
-        if (commandRepresentation == 'b')
-            command = new MovementForward(displacement);
-        else if (commandRepresentation == 'x')
-            command = new MovementBackward(displacement);
-
-        else if (commandRepresentation == 'f')
-            command = new RotationLeft();
-        else
-            command = new RotationRight();
-
-        return command;
+        switch (commandRepresentation)
+        {
+            case "b":
+                return new MovementForward(displacement);
+            case "x":
+                return new MovementBackward(displacement);
+            case "f":
+                return new RotationLeft();
+            default:
+                return new RotationRight();
+        }
     }
 }
