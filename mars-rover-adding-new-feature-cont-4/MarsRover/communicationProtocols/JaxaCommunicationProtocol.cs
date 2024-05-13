@@ -5,7 +5,7 @@ using MarsRover.communicationProtocols.commandExtractor;
 
 namespace MarsRover.communicationProtocols;
 
-public class JaxaCommunicationProtocol : CommunicationProtocolBase,  CommunicationProtocol
+public class JaxaCommunicationProtocol : CommunicationProtocolForAgency,  CommunicationProtocol
 {
     protected CommandExtractor _commandExtractor;
 

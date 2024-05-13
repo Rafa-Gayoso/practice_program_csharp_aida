@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MarsRover.communicationProtocols;
 
-public abstract class CommunicationProtocolBase
+public abstract class CommunicationProtocolForAgency
 {
     protected abstract Command CreateCommand(int displacement, string commandRepresentation);
 
