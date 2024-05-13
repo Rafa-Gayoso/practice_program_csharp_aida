@@ -5,7 +5,7 @@ using MarsRover.communicationProtocols.commandExtractor;
 
 namespace MarsRover.communicationProtocols;
 
-public class CnsaCommunicationProtocol : CommunicationProtocol
+public class CnsaCommunicationProtocol : CommunicationProtocolBase, CommunicationProtocol
 {
     protected CommandExtractor _commandExtractor;
 
@@ -14,7 +14,7 @@ public class CnsaCommunicationProtocol : CommunicationProtocol
         _commandExtractor = new FixedLengthCommandExtractor(2);
     }
 
-    private Command CreateCommand(int displacement, string commandRepresentation)
+    protected override Command CreateCommand(int displacement, string commandRepresentation)
     {
         return commandRepresentation switch
         {
@@ -27,9 +27,6 @@ public class CnsaCommunicationProtocol : CommunicationProtocol
 
     public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
     {
-        var commandRepresentations = _commandExtractor.Extract(commandsSequence);
-        return commandRepresentations
-            .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
-            .ToList();
+        return GetCommands(commandsSequence, displacement, _commandExtractor);
     }
 }

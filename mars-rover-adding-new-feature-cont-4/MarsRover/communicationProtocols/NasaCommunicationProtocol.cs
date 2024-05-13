@@ -5,16 +5,16 @@ using MarsRover.communicationProtocols.commandExtractor;
 
 namespace MarsRover.communicationProtocols;
 
-public class NasaCommunicationProtocol : CommunicationProtocol
+public class NasaCommunicationProtocol : CommunicationProtocolBase, CommunicationProtocol
 {
-    protected CommandExtractor _commandExtractor;
+    private readonly CommandExtractor _commandExtractor;
 
     public NasaCommunicationProtocol()
     {
         _commandExtractor = new FixedLengthCommandExtractor(1);
     }
 
-    private Command CreateCommand(int displacement, string commandRepresentation)
+    protected override Command CreateCommand(int displacement, string commandRepresentation)
     {
         return commandRepresentation switch
         {
@@ -27,9 +27,6 @@ public class NasaCommunicationProtocol : CommunicationProtocol
 
     public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
     {
-        var commandRepresentations = _commandExtractor.Extract(commandsSequence);
-        return commandRepresentations
-            .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
-            .ToList();
+        return GetCommands(commandsSequence, displacement, _commandExtractor);
     }
 }
