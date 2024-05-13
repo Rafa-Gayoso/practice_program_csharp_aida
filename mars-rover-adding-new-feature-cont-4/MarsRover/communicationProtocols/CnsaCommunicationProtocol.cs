@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using MarsRover.commands;
 using MarsRover.communicationProtocols.commandExtractor;
 
@@ -5,11 +7,14 @@ namespace MarsRover.communicationProtocols;
 
 public class CnsaCommunicationProtocol : CommunicationProtocol
 {
-    public CnsaCommunicationProtocol() : base(new FixedLengthCommandExtractor(2))
+    protected CommandExtractor _commandExtractor;
+
+    public CnsaCommunicationProtocol()
     {
+        _commandExtractor = new FixedLengthCommandExtractor(2);
     }
 
-    protected override Command CreateCommand(int displacement, string commandRepresentation)
+    private Command CreateCommand(int displacement, string commandRepresentation)
     {
         return commandRepresentation switch
         {
@@ -18,5 +23,13 @@ public class CnsaCommunicationProtocol : CommunicationProtocol
             "ah" => new RotationLeft(),
             _ => new RotationRight()
         };
+    }
+
+    public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
+    {
+        var commandRepresentations = _commandExtractor.Extract(commandsSequence);
+        return commandRepresentations
+            .Select(commandRepresentation => CreateCommand(displacement, commandRepresentation))
+            .ToList();
     }
 }

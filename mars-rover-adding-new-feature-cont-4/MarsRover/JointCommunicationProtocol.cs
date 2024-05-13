@@ -5,8 +5,7 @@ namespace MarsRover.communicationProtocols;
 
 public class JointCommunicationProtocol : CommunicationProtocol
 {
-    public JointCommunicationProtocol() : base(null) { }
-    public override List<Command> CreateCommands(string commandsSequence, int displacement)
+    public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
     {
         if (commandsSequence == string.Empty)
         {
@@ -43,10 +42,5 @@ public class JointCommunicationProtocol : CommunicationProtocol
 
         return new UnknownProtocol();
 
-    }
-
-    protected override Command CreateCommand(int displacement, string commandRepresentation)
-    {
-        throw new NotImplementedException();
     }
 }
