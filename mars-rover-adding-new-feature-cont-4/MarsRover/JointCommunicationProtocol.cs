@@ -5,7 +5,7 @@ namespace MarsRover.communicationProtocols;
 
 public class JointCommunicationProtocol : CommunicationProtocol
 {
-    public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
+    public override List<Command> CreateCommands(string commandsSequence, int displacement)
     {
         if (commandsSequence == string.Empty)
         {
@@ -22,22 +22,22 @@ public class JointCommunicationProtocol : CommunicationProtocol
     {
         if (protocolIdentifier == "*")
         {
-            return new EsaCommunicationProtocol();
+            return CreateEsaCommunicationProtocol();
         }
 
         if (protocolIdentifier == "%")
         {
-            return new CnsaCommunicationProtocol();
+            return CreateCnsaCommunicationProtocol();
         }
 
         if (protocolIdentifier == "+")
         {
-            return new JaxaCommunicationProtocol();
+            return CreateJaxaCommunicationProtocol();
         }
 
         if (protocolIdentifier == "$")
         {
-            return new NasaCommunicationProtocol();
+            return CreateNasaCommunicationProtocol();
         }
 
         return new UnknownProtocol();

@@ -1,4 +1,5 @@
 using MarsRover.communicationProtocols;
+using MarsRover.communicationProtocols.commandExtractor;
 
 namespace MarsRover.Tests.helpers;
 
@@ -37,22 +38,22 @@ public class RoverBuilder
 
     public static RoverBuilder NasaRover()
     {
-        return new RoverBuilder(1, 0, "N", new NasaCommunicationProtocol());
+        return new RoverBuilder(1, 0, "N", CommunicationProtocol.CreateNasaCommunicationProtocol());
     }
 
     public static RoverBuilder EsaRover()
     {
-        return new RoverBuilder(0, 2, "N", new EsaCommunicationProtocol());
+        return new RoverBuilder(0, 2, "N", CommunicationProtocol.CreateEsaCommunicationProtocol());
     }
 
     public static RoverBuilder CsnaRover()
     {
-        return new RoverBuilder(3, 0, "N", new CnsaCommunicationProtocol());
+        return new RoverBuilder(3, 0, "N", CommunicationProtocol.CreateCnsaCommunicationProtocol());
     }
 
     public static RoverBuilder JaxaRover()
     {
-        return new RoverBuilder(1, 1, "N", new JaxaCommunicationProtocol());
+        return new RoverBuilder(1, 1, "N", CommunicationProtocol.CreateJaxaCommunicationProtocol());
     }
 
 
