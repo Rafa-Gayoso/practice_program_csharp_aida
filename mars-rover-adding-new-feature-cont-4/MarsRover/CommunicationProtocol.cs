@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MarsRover.communicationProtocols;
@@ -13,7 +14,7 @@ public abstract class CommunicationProtocol
         _commandExtractor = commandExtractor;
     }
 
-    public List<Command> CreateCommands(string commandsSequence, int displacement)
+    public virtual List<Command> CreateCommands(string commandsSequence, int displacement)
     {
         var commandRepresentations = _commandExtractor.Extract(commandsSequence);
         return commandRepresentations
