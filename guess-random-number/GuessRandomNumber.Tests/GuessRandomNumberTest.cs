@@ -39,7 +39,7 @@ namespace GuessRandomNumber.Tests {
         }
 
         [Test]
-        public void given_random_number_is_5_and_the_user_select_5_then_the_user_has_won() {
+        public void user_wins_with_firts_guess() {
             _inputReceiver.GuessNumber().Returns(5);
             _numberGenerator.Generate().Returns(5);
 
@@ -48,29 +48,45 @@ namespace GuessRandomNumber.Tests {
             _notifier.Received(1).Notify("You win!");
         }
 
-        [TestCase(6)]
-        [TestCase(9)]
-        public void given_random_number_is_5_and_the_user_select_6_then_the_user_has_other_try(int userGuess) {
-            _inputReceiver.GuessNumber().Returns(userGuess);
-            _numberGenerator.Generate().Returns(5);
-
-            _numberGuesser.Run();
-
-            _notifier.Received(1).Notify($"Number to guess is lower than {userGuess}. Try again.");
-            _notifier.Received(1).Notify(Arg.Any<string>());
-        }
-
         [Test]
-        public void given_random_number_is_5_and_the_user_select_4_then_the_user_has_other_try() {
-            _inputReceiver.GuessNumber().Returns(4);
+        public void user_wins_with_second_guess()
+        {
+            _inputReceiver.GuessNumber().Returns(4,5);
             _numberGenerator.Generate().Returns(5);
 
             _numberGuesser.Run();
 
             _notifier.Received(1).Notify("Number to guess is bigger than 4. Try again.");
-            _notifier.Received(1).Notify(Arg.Any<string>());
+            _notifier.Received(1).Notify("You win!");
+            _notifier.Received(2).Notify(Arg.Any<string>());
         }
 
+        [Test]
+        public void user_wins_with_third_guess()
+        {
+            _inputReceiver.GuessNumber().Returns(4, 8, 6);
+            _numberGenerator.Generate().Returns(6);
 
+            _numberGuesser.Run();
+
+            _notifier.Received(1).Notify("Number to guess is bigger than 4. Try again.");
+            _notifier.Received(1).Notify("Number to guess is lower than 8. Try again.");
+            _notifier.Received(1).Notify("You win!");
+            _notifier.Received(3).Notify(Arg.Any<string>());
+        }
+
+        [Test]
+        public void user_loses()
+        {
+            _inputReceiver.GuessNumber().Returns(4, 8, 3);
+            _numberGenerator.Generate().Returns(5);
+
+            _numberGuesser.Run();
+
+            _notifier.Received(1).Notify("Number to guess is bigger than 4. Try again.");
+            _notifier.Received(1).Notify("Number to guess is lower than 8. Try again.");
+            _notifier.Received(1).Notify("You lose");
+            _notifier.Received(3).Notify(Arg.Any<string>());
+        }
     }
 }
