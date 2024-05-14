@@ -2,6 +2,7 @@ namespace GuessRandomNumber;
 
 public class NumberGuesser
 {
+    private const int MaxGuesses = 3;
     private readonly InputReceiver _inputReceiver;
     private readonly NumberGenerator _numberGenerator;
     private readonly Notifier _notifier;
@@ -17,24 +18,28 @@ public class NumberGuesser
     {
         var numberToGuess = _numberGenerator.Generate();
 
-        for (int i = 0; i < 3; i++)
+        for (var guesses = 1; guesses <= MaxGuesses; guesses++)
         {
             var userGuess = _inputReceiver.GuessNumber();
             if (userGuess == numberToGuess) {
                 _notifier.Notify("You win!");
                 return;
             }
-            if (i == 2) {
+            if (guesses == MaxGuesses) {
                 _notifier.Notify("You lose");
                 return;
             }
-            if (userGuess > numberToGuess) {
-                _notifier.Notify($"Number to guess is lower than {userGuess}. Try again.");
-
-            }
-            else {
-                _notifier.Notify($"Number to guess is bigger than {userGuess}. Try again.");
-            }
+            _notifier.Notify(ComposeHint(userGuess, numberToGuess));
         }
+    }
+
+    private string ComposeHint(int userGuess, int numberToGuess)
+    {
+        if (userGuess > numberToGuess)
+        {
+            return $"Number to guess is lower than {userGuess}. Try again.";
+        }
+
+        return $"Number to guess is bigger than {userGuess}. Try again.";
     }
 }
