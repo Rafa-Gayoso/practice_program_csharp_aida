@@ -52,21 +52,25 @@ namespace ReadBooks.Tests
         [Test]
         public void given_user_and_logged_user_are_friends_then_return_read_books_from_given_user()
         {
-            var loggerUserId = Guid.NewGuid();
-            var loggedUser = new User(loggerUserId);
+            var loggedUserId = Guid.NewGuid();
+            var anyTitle = "Pragmatic programmer";
+            var loggedUser = new User(loggedUserId);
             _session.GetLoggedUser().Returns(loggedUser);
             User requestUser = new(Guid.NewGuid());
             _friendsRepository
                 .GetFriendsOf(requestUser.Id)
-                .Returns(new List<User> { new User(loggerUserId) });
-            var readBooks = new List<Book> { new Book("Pragmatic programmer") };
+                .Returns(new List<User> { new User(loggedUserId) });
+            var readBooks = new List<Book> { new Book(anyTitle) };
             _booksRepository
                 .GetBooksReadBy(requestUser.Id)
                 .Returns(readBooks);
 
             var booksReadByUser = _readBooksService.GetBooksReadByUser(requestUser);
 
-            booksReadByUser.Should().BeEquivalentTo(readBooks);
+            booksReadByUser.Should().BeEquivalentTo(new List<Book>
+            {
+                new Book(anyTitle)
+            });
         }
     }
 }
