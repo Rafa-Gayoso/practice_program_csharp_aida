@@ -2,10 +2,13 @@ using System.Security.Cryptography;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GuessRandomNumber.Tests
-{
-    public class GuessRandomNumberTest
-    {
+namespace GuessRandomNumber.Tests {
+    public class GuessRandomNumberTest {
+        private InputReceiver _inputReceiver;
+        private NumberGenerator _numberGenerator;
+        private Notifier _notifier;
+
+        private NumberGuesser _numberGuesser;
         //Input
         // user number
         // numero a adivinar
@@ -26,53 +29,34 @@ namespace GuessRandomNumber.Tests
          * Dado el numero aleatorio 5 y al usuario le quedan 2 intentos, el usuario escoge 5, se le notifica que ha ganado
          * Dado el numero aleatorio 5 y al usuario le quedan 1 intentos, el usuario escoge 8, se le notifica que ha perdido pq se ha quedado sin intentos
          */
+
+        [SetUp]
+        public void Setup() {
+            _inputReceiver = Substitute.For<InputReceiver>();
+            _numberGenerator = Substitute.For<NumberGenerator>();
+            _notifier = Substitute.For<Notifier>();
+            _numberGuesser = new NumberGuesser(_inputReceiver, _numberGenerator, _notifier);
+        }
+
         [Test]
-        public void given_random_number_is_5_and_the_user_select_5_then_the_user_has_won()
-        {
-            var inputReceiver = Substitute.For<InputReceiver>();
-            var numberGenerator =Substitute.For<NumberGenerator>();
-            var notifier = Substitute.For<Notifier>();
-            var numberGuesser = new NumberGuesser(inputReceiver, numberGenerator, notifier);
-            inputReceiver.GuessNumber().Returns(5);
-            numberGenerator.Generate().Returns(5);
+        public void given_random_number_is_5_and_the_user_select_5_then_the_user_has_won() {
+            _inputReceiver.GuessNumber().Returns(5);
+            _numberGenerator.Generate().Returns(5);
 
-            numberGuesser.Run();
+            _numberGuesser.Run();
 
-            notifier.Received(1).Notify("You win!");
-        }
-    }
-
-    public interface Notifier
-    {
-        void Notify(string message);
-    }
-
-    public interface NumberGenerator
-    {
-        int Generate();
-    }
-
-    public interface InputReceiver
-    {
-        int GuessNumber();
-    }
-
-    public class NumberGuesser
-    {
-        private readonly InputReceiver _inputReceiver;
-        private readonly NumberGenerator _numberGenerator;
-        private readonly Notifier _notifier;
-
-        public NumberGuesser(InputReceiver inputReceiver, NumberGenerator numberGenerator, Notifier notifier)
-        {
-            _inputReceiver = inputReceiver;
-            _numberGenerator = numberGenerator;
-            _notifier = notifier;
+            _notifier.Received(1).Notify("You win!");
         }
 
-        public void Run()
-        {
-            _notifier.Notify("You win!");
+        [TestCase(6)]
+        [TestCase(9)]
+        public void given_random_number_is_5_and_the_user_select_6_then_the_user_has_other_try(int userGuess) {
+            _inputReceiver.GuessNumber().Returns(userGuess);
+            _numberGenerator.Generate().Returns(5);
+
+            _numberGuesser.Run();
+
+            _notifier.Received(1).Notify($"Number to guess is lower than {userGuess}. Try again.");
         }
     }
 }
