@@ -57,6 +57,20 @@ namespace GuessRandomNumber.Tests {
             _numberGuesser.Run();
 
             _notifier.Received(1).Notify($"Number to guess is lower than {userGuess}. Try again.");
+            _notifier.Received(1).Notify(Arg.Any<string>());
         }
+
+        [Test]
+        public void given_random_number_is_5_and_the_user_select_4_then_the_user_has_other_try() {
+            _inputReceiver.GuessNumber().Returns(4);
+            _numberGenerator.Generate().Returns(5);
+
+            _numberGuesser.Run();
+
+            _notifier.Received(1).Notify("Number to guess is bigger than 4. Try again.");
+            _notifier.Received(1).Notify(Arg.Any<string>());
+        }
+
+
     }
 }

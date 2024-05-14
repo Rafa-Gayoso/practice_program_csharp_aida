@@ -21,6 +21,12 @@ public class NumberGuesser
             _notifier.Notify("You win!");
             return;
         }
-        _notifier.Notify($"Number to guess is lower than {userGuess}. Try again.");
+        if (userGuess > numberToGuess) {
+            _notifier.Notify($"Number to guess is lower than {userGuess}. Try again.");
+            
+        }
+        else {
+            _notifier.Notify($"Number to guess is bigger than {userGuess}. Try again.");
+        }
     }
 }
