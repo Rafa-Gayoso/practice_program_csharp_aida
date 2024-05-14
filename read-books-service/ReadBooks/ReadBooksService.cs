@@ -4,12 +4,12 @@ namespace ReadBooks;
 
 public class ReadBooksService
 {
-    private readonly DataPersistence _dataPersistence;
+    private readonly BooksRepository _booksRepository;
     private readonly Session _session;
 
-    public ReadBooksService(DataPersistence dataPersistence, Session session)
+    public ReadBooksService(BooksRepository booksRepository, Session session)
     {
-        _dataPersistence = dataPersistence;
+        _booksRepository = booksRepository;
         _session = session;
     }
 

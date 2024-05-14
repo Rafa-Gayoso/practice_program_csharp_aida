@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ReadBooks;
 
-public interface DataPersistence
+public interface BooksRepository
 {
     IEnumerable<User> GetFriendsOf(Guid requestUserId);
 }

@@ -7,16 +7,25 @@ namespace ReadBooks.Tests
 {
     public class ReadBooksServiceTest
     {
+        private BooksRepository _booksRepository;
+        private Session _session;
+        private ReadBooksService _readBooksService;
+
+        [SetUp]
+        public void Setup()
+        {
+            _booksRepository = Substitute.For<BooksRepository>();
+            _session = Substitute.For<Session>();
+            _readBooksService = new(_booksRepository, _session);
+        }
+
         [Test]
         public void user_is_not_logged_throw_exception()
         {
-            DataPersistence _dataPersistence = Substitute.For<DataPersistence>();
-            Session session = Substitute.For<Session>();
-            session.GetLoggedUser().ReturnsNull();
-            ReadBooksService readBooksService = new(_dataPersistence, session);
+            _session.GetLoggedUser().ReturnsNull();
             User user = new(Guid.NewGuid());
 
-            Action act = () => readBooksService.GetBooksReadByUser(user);
+            Action act = () => _readBooksService.GetBooksReadByUser(user);
 
             act.Should()
                 .Throw<UserNotLoggedException>()
@@ -26,17 +35,14 @@ namespace ReadBooks.Tests
         [Test]
         public void given_user_and_logged_user_are_not_friends()
         {
-            DataPersistence _dataPersistence = Substitute.For<DataPersistence>();
-            Session session = Substitute.For<Session>();
-            ReadBooksService readBooksService = new(_dataPersistence, session);
             var loggedUser = new User(Guid.NewGuid());
-            session.GetLoggedUser().Returns(loggedUser);
+            _session.GetLoggedUser().Returns(loggedUser);
             User requestUser = new(Guid.NewGuid());
-            _dataPersistence
+            this._booksRepository
                 .GetFriendsOf(requestUser.Id)
                 .Returns(Enumerable.Empty<User>());
 
-            var booksReadByUser = readBooksService.GetBooksReadByUser(requestUser);
+            var booksReadByUser = new ReadBooksService(this._booksRepository, _session).GetBooksReadByUser(requestUser);
 
             booksReadByUser.Should().BeEmpty();
         }
