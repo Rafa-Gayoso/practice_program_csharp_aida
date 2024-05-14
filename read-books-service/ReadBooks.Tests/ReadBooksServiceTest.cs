@@ -11,6 +11,9 @@ namespace ReadBooks.Tests
         private BooksRepository _booksRepository;
         private Session _session;
         private ReadBooksService _readBooksService;
+        private User _requestUser;
+        private User _loggedUser;
+        private Guid _loggedUserId;
 
         [SetUp]
         public void Setup()
@@ -19,15 +22,17 @@ namespace ReadBooks.Tests
             _booksRepository = Substitute.For<BooksRepository>();
             _session = Substitute.For<Session>();
             _readBooksService = new(_friendsRepository, _session, _booksRepository);
+            _loggedUserId = Guid.NewGuid();
+           _loggedUser = new User(_loggedUserId);
+           _requestUser = new(Guid.NewGuid());
         }
 
         [Test]
         public void user_is_not_logged_throw_exception()
         {
             _session.GetLoggedUser().ReturnsNull();
-            User user = new(Guid.NewGuid());
 
-            Action act = () => _readBooksService.GetBooksReadByUser(user);
+            Action act = () => _readBooksService.GetBooksReadByUser(_requestUser);
 
             act.Should()
                 .Throw<UserNotLoggedException>()
@@ -37,14 +42,12 @@ namespace ReadBooks.Tests
         [Test]
         public void given_user_and_logged_user_are_not_friends()
         {
-            var loggedUser = new User(Guid.NewGuid());
-            _session.GetLoggedUser().Returns(loggedUser);
-            User requestUser = new(Guid.NewGuid());
+            _session.GetLoggedUser().Returns(_loggedUser);
             _friendsRepository
-                .GetFriendsOf(requestUser.Id)
+                .GetFriendsOf(_requestUser.Id)
                 .Returns(Enumerable.Empty<User>());
 
-            var booksReadByUser = _readBooksService.GetBooksReadByUser(requestUser);
+            var booksReadByUser = _readBooksService.GetBooksReadByUser(_requestUser);
 
             booksReadByUser.Should().BeEmpty();
         }
@@ -52,20 +55,16 @@ namespace ReadBooks.Tests
         [Test]
         public void given_user_and_logged_user_are_friends_then_return_read_books_from_given_user()
         {
-            var loggedUserId = Guid.NewGuid();
             var anyTitle = "Pragmatic programmer";
-            var loggedUser = new User(loggedUserId);
-            _session.GetLoggedUser().Returns(loggedUser);
-            User requestUser = new(Guid.NewGuid());
+            _session.GetLoggedUser().Returns(_loggedUser);
             _friendsRepository
-                .GetFriendsOf(requestUser.Id)
-                .Returns(new List<User> { new User(loggedUserId) });
-            var readBooks = new List<Book> { new Book(anyTitle) };
+                .GetFriendsOf(_requestUser.Id)
+                .Returns(new List<User> { new User(_loggedUserId) });
             _booksRepository
-                .GetBooksReadBy(requestUser.Id)
-                .Returns(readBooks);
+                .GetBooksReadBy(_requestUser.Id)
+                .Returns(new List<Book> { new Book(anyTitle) });
 
-            var booksReadByUser = _readBooksService.GetBooksReadByUser(requestUser);
+            var booksReadByUser = _readBooksService.GetBooksReadByUser(_requestUser);
 
             booksReadByUser.Should().BeEquivalentTo(new List<Book>
             {
