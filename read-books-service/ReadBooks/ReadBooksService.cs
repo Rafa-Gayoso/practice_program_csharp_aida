@@ -1,18 +1,27 @@
+using System.Collections.Generic;
+
 namespace ReadBooks;
 
 public class ReadBooksService
 {
     private readonly DataPersistence _dataPersistence;
-    private readonly SessionObject _sessionObject;
+    private readonly Session _session;
 
-    public ReadBooksService(DataPersistence dataPersistence, SessionObject sessionObject)
+    public ReadBooksService(DataPersistence dataPersistence, Session session)
     {
         _dataPersistence = dataPersistence;
-        _sessionObject = sessionObject;
+        _session = session;
     }
 
-    public void GetBooksReadByUser(User user)
+    public List<Book> GetBooksReadByUser(User user)
     {
-        throw new UserNotLoggedException("The user is not logged");
+        var loggedUser = _session.GetLoggedUser();
+
+        if (loggedUser is null)
+        {
+            throw new UserNotLoggedException("The user is not logged");
+        }
+
+        return new List<Book>();
     }
 }

@@ -4,10 +4,10 @@ namespace ReadBooks;
 
 public class User
 {
-    private readonly Guid _id;
+    public Guid Id { get; init; }
 
     public User(Guid id)
     {
-        _id = id;
+        Id = id;
     }
 }

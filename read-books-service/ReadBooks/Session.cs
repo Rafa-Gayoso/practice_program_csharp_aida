@@ -1,6 +1,6 @@
 namespace ReadBooks;
 
-public interface SessionObject
+public interface Session
 {
     User GetLoggedUser();
 }
