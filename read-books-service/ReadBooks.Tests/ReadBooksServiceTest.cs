@@ -38,11 +38,11 @@ namespace ReadBooks.Tests
             var loggedUser = new User(Guid.NewGuid());
             _session.GetLoggedUser().Returns(loggedUser);
             User requestUser = new(Guid.NewGuid());
-            this._booksRepository
+            _booksRepository
                 .GetFriendsOf(requestUser.Id)
                 .Returns(Enumerable.Empty<User>());
 
-            var booksReadByUser = new ReadBooksService(this._booksRepository, _session).GetBooksReadByUser(requestUser);
+            var booksReadByUser = _readBooksService.GetBooksReadByUser(requestUser);
 
             booksReadByUser.Should().BeEmpty();
         }
