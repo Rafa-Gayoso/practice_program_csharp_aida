@@ -17,7 +17,7 @@ public class ShoppingCartTest
         _productsRepository = Substitute.For<ProductsRepository>();
         _notifier = Substitute.For<Notifier>();
         _checkoutService = Substitute.For<CheckoutService>();
-        _shoppingCart = new(_productsRepository, _notifier, _checkoutService);
+        _shoppingCart = new ShoppingCart(_productsRepository, _notifier, _checkoutService);
     }
 
     [Test]
@@ -34,8 +34,8 @@ public class ShoppingCartTest
     [Test]
     public void add_available_product()
     {
-        var productName = "Iceberg";
-        var cost = 1.55m;
+        const string productName = "Iceberg";
+        const decimal cost = 1.55m;
         _productsRepository.Get(productName).Returns(new Product(productName, cost, 0, 0));
 
         _shoppingCart.AddItem(productName);
