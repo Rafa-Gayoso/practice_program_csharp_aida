@@ -39,15 +39,13 @@ public class ShoppingCartTest
     [Test]
     public void add_available_product()
     {
-        const decimal cost = 1.55m;
         _productsRepository.Get(Iceberg).Returns(
-            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(cost).Build());
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(1.55m).Build());
 
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = CreateShoppingCartDto(cost);
-        _checkoutService.Received(1).Checkout(cart);
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(1.55m));
     }
 
 
@@ -64,8 +62,7 @@ public class ShoppingCartTest
         _shoppingCart.AddItem(Tomato);
         _shoppingCart.Checkout();
 
-        var cart = CreateShoppingCartDto(2.55m);
-        _checkoutService.Received(1).Checkout(cart);
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(2.55m));
     }
 
     [Test]
@@ -81,8 +78,7 @@ public class ShoppingCartTest
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = CreateShoppingCartDto(1.10m);
-        _checkoutService.Received(1).Checkout(cart);
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(1.10m));
     }
 
     [Test]
@@ -98,8 +94,7 @@ public class ShoppingCartTest
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = CreateShoppingCartDto(2.10m);
-        _checkoutService.Received(1).Checkout(cart);
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(2.10m));
     }
 
     [Test]
@@ -116,8 +111,7 @@ public class ShoppingCartTest
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = CreateShoppingCartDto(2.31m);
-        _checkoutService.Received(1).Checkout(cart);
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(2.31m));
     }
 
     [Test]
