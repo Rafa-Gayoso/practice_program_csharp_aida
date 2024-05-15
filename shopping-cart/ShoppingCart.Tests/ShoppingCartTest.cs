@@ -1,6 +1,7 @@
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
+using static ShoppingCart.Tests.ProductBuilder;
 
 namespace ShoppingCart.Tests;
 
@@ -36,7 +37,8 @@ public class ShoppingCartTest
     {
         const string productName = "Iceberg";
         const decimal cost = 1.55m;
-        _productsRepository.Get(productName).Returns(new Product(productName, cost, 0, 0));
+        _productsRepository.Get(productName).Returns(
+            TaxFreeWithNoRevenueProduct().Named(productName).Costing(cost).Build());
 
         _shoppingCart.AddItem(productName);
         _shoppingCart.Checkout();
@@ -51,8 +53,8 @@ public class ShoppingCartTest
         const string Tomato = "Tomato";
         const decimal IcebergCost = 1.55m;
         const decimal TomatoCost = 1m;
-        _productsRepository.Get(Iceberg).Returns(new Product(Iceberg, IcebergCost, 0, 0));
-        _productsRepository.Get(Tomato).Returns(new Product(Tomato, TomatoCost, 0, 0));
+        _productsRepository.Get(Iceberg).Returns(TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(IcebergCost).Build());
+        _productsRepository.Get(Tomato).Returns(TaxFreeWithNoRevenueProduct().Named(Tomato).Costing(TomatoCost).Build());
 
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.AddItem(Tomato);
@@ -61,5 +63,7 @@ public class ShoppingCartTest
         var cart = new ShoppingCartDto(IcebergCost + TomatoCost);
         _checkoutService.Received(1).Checkout(cart);
     }
+
+    
 
 }
