@@ -117,9 +117,10 @@ public class ShoppingCartTest
     [Test]
     public void apply_not_available_discount()
     {
-        _discountsRepository.Get(DiscountCode.PROMO_20).ReturnsNull();
+        var notAvailableDiscount = DiscountCode.PROMO_20;
+        _discountsRepository.Get(notAvailableDiscount).ReturnsNull();
 
-        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_20);
+        _shoppingCart.ApplyDiscount(notAvailableDiscount);
 
         _notifier.Received(1).ShowError("Discount is not available");
     }
