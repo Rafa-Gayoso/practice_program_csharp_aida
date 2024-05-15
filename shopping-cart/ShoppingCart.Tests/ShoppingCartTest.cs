@@ -44,4 +44,22 @@ public class ShoppingCartTest
         var cart = new ShoppingCartDto(cost);
         _checkoutService.Received(1).Checkout(cart);
     }
+
+    [Test]
+    public void add_available_two_products() {
+        const string Iceberg = "Iceberg";
+        const string Tomato = "Tomato";
+        const decimal IcebergCost = 1.55m;
+        const decimal TomatoCost = 1m;
+        _productsRepository.Get(Iceberg).Returns(new Product(Iceberg, IcebergCost, 0, 0));
+        _productsRepository.Get(Tomato).Returns(new Product(Tomato, TomatoCost, 0, 0));
+
+        _shoppingCart.AddItem(Iceberg);
+        _shoppingCart.AddItem(Tomato);
+        _shoppingCart.Checkout();
+
+        var cart = new ShoppingCartDto(IcebergCost + TomatoCost);
+        _checkoutService.Received(1).Checkout(cart);
+    }
+
 }

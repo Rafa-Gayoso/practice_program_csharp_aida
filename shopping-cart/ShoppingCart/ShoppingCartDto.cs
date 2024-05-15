@@ -8,4 +8,8 @@ public record ShoppingCartDto
     {
         _totalCost = totalCost;
     }
+
+    public override string ToString() {
+        return $"{nameof(_totalCost)}: {_totalCost}";
+    }
 }
