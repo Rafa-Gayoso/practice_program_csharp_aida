@@ -39,9 +39,19 @@ public class ShoppingCart
 
     public void Checkout()
     {
+        if (IsEmpty())
+        {
+            _notifier.ShowError("No product selected, please select a product");
+            return;
+        }
         var totalCost = ComputeTotalCost();
         var shoppingCartDto = new ShoppingCartDto(totalCost);
         _checkoutService.Checkout(shoppingCartDto);
+    }
+
+    private bool IsEmpty()
+    {
+        return !_productList.Any();
     }
 
     private decimal ComputeTotalCost()

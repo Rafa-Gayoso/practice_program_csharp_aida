@@ -155,6 +155,14 @@ public class ShoppingCartTest
         _checkoutService.Received(1).Checkout(CreateShoppingCartDto(0.99m));
     }
 
+    [Test]
+    public void checkout_without_products()
+    {
+        _shoppingCart.Checkout();
+
+        _notifier.Received(1).ShowError("No product selected, please select a product");
+    }
+
 
     private static ShoppingCartDto CreateShoppingCartDto(decimal cost)
     {
