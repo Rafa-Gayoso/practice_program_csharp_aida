@@ -17,7 +17,7 @@ public class Product
         _tax = tax;
     }
 
-    public decimal GetTotalCost()
+    public decimal ComputeCost()
     {
         var costPlusRevenue = ApplyRevenue();
         return ApplyTaxes(costPlusRevenue);
@@ -25,7 +25,7 @@ public class Product
 
     private decimal ApplyTaxes(decimal costPlusRevenue)
     {
-        return costPlusRevenue * (1 +_tax);
+        return costPlusRevenue * (1 + _tax);
     }
 
     private decimal ApplyRevenue()

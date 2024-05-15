@@ -7,6 +7,7 @@ namespace ShoppingCart.Tests;
 
 public class ShoppingCartTest
 {
+    private const string Iceberg = "Iceberg";
     private ProductsRepository _productsRepository;
     private Notifier _notifier;
     private ShoppingCart _shoppingCart;
@@ -26,9 +27,10 @@ public class ShoppingCartTest
     [Test]
     public void add_not_available_product()
     {
-        _productsRepository.Get("some_item").ReturnsNull();
+        var notAvailableProductName = "some_item";
+        _productsRepository.Get(notAvailableProductName).ReturnsNull();
 
-        _shoppingCart.AddItem("some_item");
+        _shoppingCart.AddItem(notAvailableProductName);
 
         _notifier.Received(1).ShowError("Product is not available");
     }
@@ -37,91 +39,84 @@ public class ShoppingCartTest
     [Test]
     public void add_available_product()
     {
-        const string productName = "Iceberg";
         const decimal cost = 1.55m;
-        _productsRepository.Get(productName).Returns(
-            TaxFreeWithNoRevenueProduct().Named(productName).Costing(cost).Build());
+        _productsRepository.Get(Iceberg).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(cost).Build());
 
-        _shoppingCart.AddItem(productName);
+        _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = new ShoppingCartDto(cost);
+        var cart = CreateShoppingCartDto(cost);
         _checkoutService.Received(1).Checkout(cart);
     }
 
+
     [Test]
-    public void add_available_two_products() {
-        const string Iceberg = "Iceberg";
+    public void add_available_two_products()
+    {
         const string Tomato = "Tomato";
-        const decimal IcebergCost = 1.55m;
-        const decimal TomatoCost = 1m;
         _productsRepository.Get(Iceberg).Returns(
-            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(IcebergCost).Build());
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(1.55m).Build());
         _productsRepository.Get(Tomato).Returns(
-            TaxFreeWithNoRevenueProduct().Named(Tomato).Costing(TomatoCost).Build());
+            TaxFreeWithNoRevenueProduct().Named(Tomato).Costing(1m).Build());
 
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.AddItem(Tomato);
         _shoppingCart.Checkout();
 
-        var cart = new ShoppingCartDto(IcebergCost + TomatoCost);
+        var cart = CreateShoppingCartDto(2.55m);
         _checkoutService.Received(1).Checkout(cart);
     }
 
     [Test]
-    public void add_available_one_product_with_tax() {
-        const string productName = "Iceberg";
-        const decimal cost = 1m;
-        _productsRepository.Get(productName).Returns(
+    public void add_available_one_product_with_tax()
+    {
+        _productsRepository.Get(Iceberg).Returns(
             NoRevenueProduct()
-                .Named(productName)
+                .Named(Iceberg)
                 .WithTax(0.10m)
-                .Costing(cost)
+                .Costing(1m)
                 .Build());
 
-        _shoppingCart.AddItem(productName);
+        _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = new ShoppingCartDto(1.10m);
+        var cart = CreateShoppingCartDto(1.10m);
         _checkoutService.Received(1).Checkout(cart);
     }
 
     [Test]
     public void add_available_one_product_with_revenue()
     {
-        const string productName = "Iceberg";
-        const decimal cost = 2m;
-        _productsRepository.Get(productName).Returns(
+        _productsRepository.Get(Iceberg).Returns(
             NoTaxProduct()
-                .Named(productName)
+                .Named(Iceberg)
                 .WithRevenue(0.05m)
-                .Costing(cost)
+                .Costing(2m)
                 .Build());
 
-        _shoppingCart.AddItem(productName);
+        _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = new ShoppingCartDto(2.10m);
+        var cart = CreateShoppingCartDto(2.10m);
         _checkoutService.Received(1).Checkout(cart);
     }
 
     [Test]
     public void add_available_one_product_with_revenue_and_tax()
     {
-        const string productName = "Iceberg";
-        const decimal cost = 2m;
-        _productsRepository.Get(productName).Returns(
+        _productsRepository.Get(Iceberg).Returns(
             AnyProduct()
-                .Named(productName)
+                .Named(Iceberg)
                 .WithRevenue(0.05m)
                 .WithTax(0.1m)
-                .Costing(cost)
+                .Costing(2m)
                 .Build());
 
-        _shoppingCart.AddItem(productName);
+        _shoppingCart.AddItem(Iceberg);
         _shoppingCart.Checkout();
 
-        var cart = new ShoppingCartDto(2.31m);
+        var cart = CreateShoppingCartDto(2.31m);
         _checkoutService.Received(1).Checkout(cart);
     }
 
@@ -136,13 +131,23 @@ public class ShoppingCartTest
     }
 
     [Test]
-    [Ignore("XXXXX")]
     public void apply_available_discount()
     {
-        _discountsRepository.Get(DiscountCode.PROMO_20).ReturnsNull();
+        _productsRepository.Get(Iceberg).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(1.50m).Build());
+        _discountsRepository.Get(DiscountCode.PROMO_5).Returns(new Discount(DiscountCode.PROMO_5, 0.5m));
 
-        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_20);
+        _shoppingCart.AddItem(Iceberg);
+        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_5);
+        _shoppingCart.Checkout();
 
-        _notifier.Received(1).ShowError("Discount is not available");
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(0.75m));
+
+    }
+
+
+    private static ShoppingCartDto CreateShoppingCartDto(decimal cost)
+    {
+        return new ShoppingCartDto(cost);
     }
 }
