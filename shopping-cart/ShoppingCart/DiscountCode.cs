@@ -2,7 +2,8 @@ namespace ShoppingCart;
 
 public enum DiscountCode
 {
-    PROMO_20,
+    None,
     PROMO_5,
-    None
+    PROMO_10,
+    PROMO_20,
 }

@@ -137,7 +137,22 @@ public class ShoppingCartTest
         _shoppingCart.Checkout();
 
         _checkoutService.Received(1).Checkout(CreateShoppingCartDto(0.75m));
+    }
 
+    [Test]
+    public void apply_two_available_discount()
+    {
+        _productsRepository.Get(Iceberg).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(1m).Build());
+        _discountsRepository.Get(DiscountCode.PROMO_5).Returns(new Discount(DiscountCode.PROMO_5, 0.5m));
+        _discountsRepository.Get(DiscountCode.PROMO_10).Returns(new Discount(DiscountCode.PROMO_10, 0.01m));
+
+        _shoppingCart.AddItem(Iceberg);
+        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_5);
+        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_10);
+        _shoppingCart.Checkout();
+
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(0.99m));
     }
 
 
