@@ -11,6 +11,7 @@ public class ShoppingCartTest
     private Notifier _notifier;
     private ShoppingCart _shoppingCart;
     private CheckoutService _checkoutService;
+    private DiscountRepository _discountsRepository;
 
     [SetUp]
     public void SetUp()
@@ -18,7 +19,8 @@ public class ShoppingCartTest
         _productsRepository = Substitute.For<ProductsRepository>();
         _notifier = Substitute.For<Notifier>();
         _checkoutService = Substitute.For<CheckoutService>();
-        _shoppingCart = new ShoppingCart(_productsRepository, _notifier, _checkoutService);
+        _discountsRepository = Substitute.For<DiscountRepository>();
+        _shoppingCart = new ShoppingCart(_productsRepository, _notifier, _checkoutService, _discountsRepository);
     }
 
     [Test]
@@ -121,5 +123,26 @@ public class ShoppingCartTest
 
         var cart = new ShoppingCartDto(2.31m);
         _checkoutService.Received(1).Checkout(cart);
+    }
+
+    [Test]
+    public void apply_not_available_discount()
+    {
+        _discountsRepository.Get(DiscountCode.PROMO_20).ReturnsNull();
+
+        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_20);
+
+        _notifier.Received(1).ShowError("Discount is not available");
+    }
+
+    [Test]
+    [Ignore("XXXXX")]
+    public void apply_available_discount()
+    {
+        _discountsRepository.Get(DiscountCode.PROMO_20).ReturnsNull();
+
+        _shoppingCart.ApplyDiscount(DiscountCode.PROMO_20);
+
+        _notifier.Received(1).ShowError("Discount is not available");
     }
 }

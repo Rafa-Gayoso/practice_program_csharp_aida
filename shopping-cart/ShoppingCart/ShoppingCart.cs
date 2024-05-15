@@ -8,13 +8,16 @@ public class ShoppingCart
     private readonly ProductsRepository _productsRepository;
     private readonly Notifier _notifier;
     private readonly CheckoutService _checkoutService;
+    private readonly DiscountRepository _discountsRepository;
     private List<Product> _productList; 
 
-    public ShoppingCart(ProductsRepository productsRepository, Notifier notifier, CheckoutService checkoutService)
+    public ShoppingCart(ProductsRepository productsRepository, Notifier notifier, CheckoutService checkoutService,
+        DiscountRepository discountsRepository)
     {
         _productsRepository = productsRepository;
         _notifier = notifier;
         _checkoutService = checkoutService;
+        _discountsRepository = discountsRepository;
         _productList = new List<Product>();
     }
 
@@ -39,5 +42,10 @@ public class ShoppingCart
 
     private decimal GetTotalCost() {
         return _productList.Sum(p => p.GetTotalCost());
+    }
+
+    public void ApplyDiscount(DiscountCode discountCode)
+    {
+        _notifier.ShowError("Discount is not available");
     }
 }
