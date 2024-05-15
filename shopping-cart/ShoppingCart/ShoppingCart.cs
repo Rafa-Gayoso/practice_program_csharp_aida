@@ -33,7 +33,11 @@ public class ShoppingCart
 
     public void Checkout()
     {
-        var shoppingCartDto = new ShoppingCartDto(_productList.Sum(p => p.Cost));
+        var shoppingCartDto = new ShoppingCartDto(GetTotalCost());
         _checkoutService.Checkout(shoppingCartDto);
+    }
+
+    private decimal GetTotalCost() {
+        return _productList.Sum(p => p.Cost);
     }
 }
