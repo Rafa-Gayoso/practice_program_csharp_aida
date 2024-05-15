@@ -163,6 +163,20 @@ public class ShoppingCartTest
         _notifier.Received(1).ShowError("No product selected, please select a product");
     }
 
+    [Test]
+    public void checkout_twice()
+    {
+        _productsRepository.Get(Iceberg).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(1m).Build());
+
+        _shoppingCart.AddItem(Iceberg);
+        _shoppingCart.Checkout();
+        _shoppingCart.Checkout();
+
+        _checkoutService.Received(1).Checkout(CreateShoppingCartDto(1));
+        _notifier.Received(1).ShowError("No product selected, please select a product");
+    }
+
 
     private static ShoppingCartDto CreateShoppingCartDto(decimal cost)
     {

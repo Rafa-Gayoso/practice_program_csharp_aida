@@ -19,9 +19,7 @@ public class ShoppingCart
         _notifier = notifier;
         _checkoutService = checkoutService;
         _discountsRepository = discountsRepository;
-        _productList = new List<Product>();
-
-        _discount = new Discount(DiscountCode.None, 0);
+        InitializeState();
     }
 
     public void AddItem(string productName)
@@ -55,6 +53,13 @@ public class ShoppingCart
             return;
         }
         PerformCheckout();
+        InitializeState();
+    }
+
+    private void InitializeState()
+    {
+        _productList = new List<Product>();
+        _discount = new Discount(DiscountCode.None, 0);
     }
 
     private void NotifyEmptyShoppingCart()
