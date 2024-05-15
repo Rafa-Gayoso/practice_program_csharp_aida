@@ -17,7 +17,19 @@ public class Product
         _tax = tax;
     }
 
-    public decimal GetTotalCost() {
-        return _cost + _cost*_tax;
+    public decimal GetTotalCost()
+    {
+        var costPlusRevenue = ApplyRevenue();
+        return ApplyTaxes(costPlusRevenue);
+    }
+
+    private decimal ApplyTaxes(decimal costPlusRevenue)
+    {
+        return costPlusRevenue * (1 +_tax);
+    }
+
+    private decimal ApplyRevenue()
+    {
+        return (_cost * (1 + _revenue));
     }
 }

@@ -67,7 +67,7 @@ public class ShoppingCartTest
     }
 
     [Test]
-    public void add_availsabe_one_product_with_tax() {
+    public void add_available_one_product_with_tax() {
         const string productName = "Iceberg";
         const decimal cost = 1m;
         _productsRepository.Get(productName).Returns(
@@ -84,4 +84,42 @@ public class ShoppingCartTest
         _checkoutService.Received(1).Checkout(cart);
     }
 
+    [Test]
+    public void add_available_one_product_with_revenue()
+    {
+        const string productName = "Iceberg";
+        const decimal cost = 2m;
+        _productsRepository.Get(productName).Returns(
+            NoTaxProduct()
+                .Named(productName)
+                .WithRevenue(0.05m)
+                .Costing(cost)
+                .Build());
+
+        _shoppingCart.AddItem(productName);
+        _shoppingCart.Checkout();
+
+        var cart = new ShoppingCartDto(2.10m);
+        _checkoutService.Received(1).Checkout(cart);
+    }
+
+    [Test]
+    public void add_available_one_product_with_revenue_and_tax()
+    {
+        const string productName = "Iceberg";
+        const decimal cost = 2m;
+        _productsRepository.Get(productName).Returns(
+            AnyProduct()
+                .Named(productName)
+                .WithRevenue(0.05m)
+                .WithTax(0.1m)
+                .Costing(cost)
+                .Build());
+
+        _shoppingCart.AddItem(productName);
+        _shoppingCart.Checkout();
+
+        var cart = new ShoppingCartDto(2.31m);
+        _checkoutService.Received(1).Checkout(cart);
+    }
 }
