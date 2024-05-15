@@ -51,5 +51,10 @@ namespace ShoppingCart.Tests {
         public Product Build() {
             return new Product(_productName, _cost, _revenue, _tax);
         }
+
+        public static ProductBuilder NoRevenueProduct() {
+            return AnyProduct()
+                .WithRevenue(0);
+        }
     }
 }

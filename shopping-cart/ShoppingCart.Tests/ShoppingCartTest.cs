@@ -53,8 +53,10 @@ public class ShoppingCartTest
         const string Tomato = "Tomato";
         const decimal IcebergCost = 1.55m;
         const decimal TomatoCost = 1m;
-        _productsRepository.Get(Iceberg).Returns(TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(IcebergCost).Build());
-        _productsRepository.Get(Tomato).Returns(TaxFreeWithNoRevenueProduct().Named(Tomato).Costing(TomatoCost).Build());
+        _productsRepository.Get(Iceberg).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Iceberg).Costing(IcebergCost).Build());
+        _productsRepository.Get(Tomato).Returns(
+            TaxFreeWithNoRevenueProduct().Named(Tomato).Costing(TomatoCost).Build());
 
         _shoppingCart.AddItem(Iceberg);
         _shoppingCart.AddItem(Tomato);
@@ -64,6 +66,22 @@ public class ShoppingCartTest
         _checkoutService.Received(1).Checkout(cart);
     }
 
-    
+    [Test]
+    public void add_availsabe_one_product_with_tax() {
+        const string productName = "Iceberg";
+        const decimal cost = 1m;
+        _productsRepository.Get(productName).Returns(
+            NoRevenueProduct()
+                .Named(productName)
+                .WithTax(0.10m)
+                .Costing(cost)
+                .Build());
+
+        _shoppingCart.AddItem(productName);
+        _shoppingCart.Checkout();
+
+        var cart = new ShoppingCartDto(1.10m);
+        _checkoutService.Received(1).Checkout(cart);
+    }
 
 }

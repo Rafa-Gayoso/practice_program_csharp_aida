@@ -38,6 +38,6 @@ public class ShoppingCart
     }
 
     private decimal GetTotalCost() {
-        return _productList.Sum(p => p.Cost);
+        return _productList.Sum(p => p.GetTotalCost());
     }
 }
