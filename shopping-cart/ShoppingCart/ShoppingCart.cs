@@ -41,9 +41,32 @@ public class ShoppingCart
     {
         if (IsEmpty())
         {
-            _notifier.ShowError("No product selected, please select a product");
+            NotifyEmptyShoppingCart();
             return;
         }
+        PerformCheckout();
+    }
+
+    public void ApplyDiscount(DiscountCode discountCode)
+    {
+        var discount = _discountsRepository.Get(discountCode);
+
+        if (discount is null)
+        {
+            _notifier.ShowError("Discount is not available");
+            return;
+        }
+
+        _discount = discount;
+    }
+
+    private void NotifyEmptyShoppingCart()
+    {
+        _notifier.ShowError("No product selected, please select a product");
+    }
+
+    private void PerformCheckout()
+    {
         var totalCost = ComputeTotalCost();
         var shoppingCartDto = new ShoppingCartDto(totalCost);
         _checkoutService.Checkout(shoppingCartDto);
@@ -63,18 +86,5 @@ public class ShoppingCart
     private decimal ComputeAllProductsCost()
     {
         return _productList.Sum(p => p.ComputeCost());
-    }
-
-    public void ApplyDiscount(DiscountCode discountCode)
-    {
-        var discount = _discountsRepository.Get(discountCode);
-
-        if (discount is null)
-        {
-            _notifier.ShowError("Discount is not available");
-            return;
-        }
-
-        _discount = discount;
     }
 }
