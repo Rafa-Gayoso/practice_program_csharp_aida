@@ -27,35 +27,3 @@ public class ShoppingCartTest
         _notifier.Received(1).ShowError("Product is not available");
     }
 }
-
-public class ShoppingCart
-{
-    private readonly ProductsRepository _productsRepository;
-    private readonly Notifier _notifier;
-
-    public ShoppingCart(ProductsRepository productsRepository, Notifier notifier)
-    {
-        _productsRepository = productsRepository;
-        _notifier = notifier;
-    }
-
-    public void AddItem(string productName)
-    {
-        _notifier.ShowError("Product is not available");
-    }
-}
-
-public interface Notifier
-{
-    void ShowError(string message);
-}
-
-public interface ProductsRepository
-{
-    Product Get(string productName);
-}
-
-public class Product
-{
-
-}
