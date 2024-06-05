@@ -6,34 +6,85 @@ public class SecurityManager
 {
     public void CreateValidUser()
     {
-        Print("Enter a username");
-        var username = ReadUserInput();
-        Print("Enter your full name");
-        var fullName = ReadUserInput();
-        Print("Enter your password");
-        var password = ReadUserInput();
-        Print("Re-enter your password");
-        var confirmPassword = ReadUserInput();
+        var username = RequestUserName();
+        var fullName = RequestFullName();
+        var password = RequestPassword();
+        var confirmPassword = RequestPasswordConfirmation();
 
-        if (password != confirmPassword)
+        if (PasswordsDoNotMatch(password, confirmPassword))
         {
-            Print("The passwords don't match");
+            NotifyPasswordDoNotMatch();
             return;
         }
 
-        if (password.Length < 8)
+        if (IsPasswordToShort(password))
         {
-            Print("Password must be at least 8 characters in length");
+            NotifyPasswordIsToShort();
             return;
         }
 
-        // Encrypt the password (just reverse it, should be secure)
-        char[] array = password.ToCharArray();
-        Array.Reverse(array);
-
-        Print($"Saving Details for User ({username}, {fullName}, {new string(array)})\n");
+        var encryptedPassword = EncryptPassword(password);
+        NotifyUserCreation(username, fullName, encryptedPassword);
     }
 
+    private void NotifyPasswordIsToShort()
+    {
+        Print("Password must be at least 8 characters in length");
+    }
+
+    private void NotifyPasswordDoNotMatch()
+    {
+        Print("The passwords don't match");
+    }
+
+    private void NotifyUserCreation(string username, string fullName, string encryptedPassword)
+    {
+        Print($"Saving Details for User ({username}, {fullName}, {encryptedPassword})\n");
+    }
+
+    private static string EncryptPassword(string password)
+    {
+        char[] array = password.ToCharArray();
+        Array.Reverse(array);
+        var encryptedPassword = new string(array);
+        return encryptedPassword;
+    }
+
+    private static bool IsPasswordToShort(string password)
+    {
+        return password.Length < 8;
+    }
+
+    private static bool PasswordsDoNotMatch(string password, string confirmPassword)
+    {
+        return password != confirmPassword;
+    }
+
+    private string RequestPasswordConfirmation()
+    {
+        return RequestUserInput("Re-enter your password");
+    }
+
+    private string RequestPassword()
+    {
+        return RequestUserInput("Enter your password");
+    }
+
+    private string RequestFullName()
+    {
+        return RequestUserInput("Enter your full name");
+    }
+
+    private string RequestUserName()
+    {
+        return RequestUserInput("Enter a username");
+    }
+
+    private string RequestUserInput(string requestMessage)
+    {
+        Print(requestMessage);
+        return ReadUserInput();
+    }
     protected virtual void Print(string message)
     {
         Console.WriteLine(message);
