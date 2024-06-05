@@ -4,13 +4,19 @@ namespace LegacySecurityManager;
 
 public class SecurityManager
 {
-    private Notifier _notifier;
-    private InputReader _consoleInputReader;
+    private readonly Notifier _notifier;
+    private readonly InputReader _consoleInputReader;
 
     public SecurityManager()
     {
         _notifier = new ConsoleNotifier();
         _consoleInputReader = new ConsoleInputReader();
+    }
+
+    public SecurityManager(Notifier notifier, InputReader consoleInputReader)
+    {
+        _notifier = notifier;
+        _consoleInputReader = consoleInputReader;
     }
 
     public void CreateValidUser()
