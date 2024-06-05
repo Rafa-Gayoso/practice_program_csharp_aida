@@ -4,6 +4,15 @@ namespace LegacySecurityManager;
 
 public class SecurityManager
 {
+    private Notifier _notifier;
+    private InputReader _consoleInputReader;
+
+    public SecurityManager()
+    {
+        _notifier = new ConsoleNotifier();
+        _consoleInputReader = new ConsoleInputReader();
+    }
+
     public void CreateValidUser()
     {
         var username = RequestUserName();
@@ -85,18 +94,47 @@ public class SecurityManager
         Print(requestMessage);
         return ReadUserInput();
     }
+
+    //ConsoleNotifier : Notifier
     protected virtual void Print(string message)
     {
-        Console.WriteLine(message);
+        _notifier.Notify(message);
     }
 
+    // ConsoleInputReader : Reader
     protected virtual string ReadUserInput()
     {
-        return Console.ReadLine();
+        return _consoleInputReader.Read();
     }
 
     public static void CreateUser()
     {
         new SecurityManager().CreateValidUser();
+    }
+}
+
+public interface InputReader
+{
+    string Read();
+}
+
+public class ConsoleInputReader : InputReader
+{
+    public string Read()
+    {
+        return Console.ReadLine();
+    }
+}
+
+public interface Notifier
+{
+    void Notify(string message);
+}
+
+public class ConsoleNotifier : Notifier
+{
+    public void Notify(string message)
+    {
+        Console.WriteLine(message);
     }
 }
