@@ -1,25 +1,30 @@
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace LegacySecurityManager.Tests
 {
     public class SecurityManagerTest
     {
+        private SecurityManagerForTesting _securityManager;
+
         [Test]
         public void do_not_save_user_when_password_and_confirm_password_are_not_equals()
         {
-            var securityManager = SecurityManagerReceivingInputs("Pepe", "Pepe Garcia", "Pepe1234", "Pepe1234.");
+            _securityManager = SecurityManagerReceivingInputs("Pepe", "Pepe Garcia", "Pepe1234", "Pepe1234.");
 
-            securityManager.CreateValidUser();
+            _securityManager.CreateValidUser();
 
-            Assert.That(securityManager.PrintedMessage.Count, Is.EqualTo(5));
-            Assert.That(securityManager.PrintedMessage, Is.EquivalentTo(new List<string>
-            {
-                "Enter a username",
-                "Enter your full name",
-                "Enter your password",
-                "Re-enter your password",
-                "The passwords don't match"
-            }));
+            AssertPrintedMessages("The passwords don't match");
+        }
+
+        [Test]
+        public void do_not_save_user_when_password_too_short()
+        {
+            _securityManager = SecurityManagerReceivingInputs("Pepe", "Pepe Garcia", "Pepe123", "Pepe123");
+
+            _securityManager.CreateValidUser();
+
+            AssertPrintedMessages("Password must be at least 8 characters in length");
         }
 
         private static SecurityManagerForTesting SecurityManagerReceivingInputs(params string[] inputs)
@@ -31,6 +36,19 @@ namespace LegacySecurityManager.Tests
             }
 
             return new SecurityManagerForTesting(userInputs);
+        }
+
+        private void AssertPrintedMessages(string lastMessage)
+        {
+            Assert.That(_securityManager.PrintedMessage.Count, Is.EqualTo(5));
+            Assert.That(_securityManager.PrintedMessage, Is.EquivalentTo(new List<string>
+            {
+                "Enter a username",
+                "Enter your full name",
+                "Enter your password",
+                "Re-enter your password",
+                lastMessage
+            }));
         }
     }
 
