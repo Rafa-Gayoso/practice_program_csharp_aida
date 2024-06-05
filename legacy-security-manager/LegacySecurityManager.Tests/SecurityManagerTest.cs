@@ -5,12 +5,14 @@ namespace LegacySecurityManager.Tests
 {
     public class SecurityManagerTest
     {
+        private const string Username = "Pepe";
+        private const string FullName = "Pepe Garcia";
         private SecurityManagerForTesting _securityManager;
 
         [Test]
         public void do_not_save_user_when_password_and_confirm_password_are_not_equals()
         {
-            _securityManager = SecurityManagerReceivingInputs("Pepe", "Pepe Garcia", "Pepe1234", "Pepe1234.");
+            _securityManager = SecurityManagerReceivingInputs(Username, FullName, "Pepe1234", "Pepe1234.");
 
             _securityManager.CreateValidUser();
 
@@ -20,12 +22,25 @@ namespace LegacySecurityManager.Tests
         [Test]
         public void do_not_save_user_when_password_too_short()
         {
-            _securityManager = SecurityManagerReceivingInputs("Pepe", "Pepe Garcia", "Pepe123", "Pepe123");
+            _securityManager = SecurityManagerReceivingInputs(Username, FullName, "Pepe123", "Pepe123");
 
             _securityManager.CreateValidUser();
 
             AssertPrintedMessages("Password must be at least 8 characters in length");
         }
+
+        [Test]
+        public void save_user()
+        {
+            var validPassword = "Pepe1234";
+            _securityManager = SecurityManagerReceivingInputs(Username, FullName, validPassword, validPassword);
+
+            _securityManager.CreateValidUser();
+
+            var reversedPassword = "4321epeP";
+            AssertPrintedMessages($"Saving Details for User ({Username}, {FullName}, {reversedPassword})\n");
+        }
+
 
         private static SecurityManagerForTesting SecurityManagerReceivingInputs(params string[] inputs)
         {
