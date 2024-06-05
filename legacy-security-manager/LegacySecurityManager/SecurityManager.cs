@@ -5,18 +5,18 @@ namespace LegacySecurityManager;
 public class SecurityManager
 {
     private readonly Notifier _notifier;
-    private readonly InputReader _consoleInputReader;
+    private readonly InputReader _inputReader;
 
     public SecurityManager()
     {
         _notifier = new ConsoleNotifier();
-        _consoleInputReader = new ConsoleInputReader();
+        _inputReader = new ConsoleInputReader();
     }
 
-    public SecurityManager(Notifier notifier, InputReader consoleInputReader)
+    public SecurityManager(Notifier notifier, InputReader inputReader)
     {
         _notifier = notifier;
-        _consoleInputReader = consoleInputReader;
+        _inputReader = inputReader;
     }
 
     public void CreateValidUser()
@@ -110,7 +110,7 @@ public class SecurityManager
     // ConsoleInputReader : Reader
     protected virtual string ReadUserInput()
     {
-        return _consoleInputReader.Read();
+        return _inputReader.Read();
     }
 
     public static void CreateUser()

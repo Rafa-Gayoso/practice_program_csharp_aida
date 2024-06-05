@@ -1,3 +1,4 @@
+using NSubstitute;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -7,85 +8,67 @@ namespace LegacySecurityManager.Tests
     {
         private const string Username = "Pepe";
         private const string FullName = "Pepe Garcia";
-        private SecurityManagerForTesting _securityManager;
+        private Notifier _notifier;
+        private InputReader _reader;
+        private SecurityManager _securityManager;
 
+        [SetUp]
+        public void Setup()
+        {
+            _notifier = Substitute.For<Notifier>();
+            _reader = Substitute.For<InputReader>();
+            _securityManager = new SecurityManager(_notifier, _reader);
+        }
         [Test]
         public void do_not_save_user_when_password_and_confirm_password_are_not_equals()
         {
-            _securityManager = SecurityManagerReceivingInputs(Username, FullName, "Pepe1234", "Pepe1234.");
+            IntroducingPasswords("Pepe1234", "Pepe1234.");
 
-            _securityManager.CreateValidUser();
+            CreateUser();
 
-            AssertPrintedMessages("The passwords don't match");
+            VerifyNotifiedMessages("The passwords don't match");
         }
 
         [Test]
         public void do_not_save_user_when_password_too_short()
         {
-            _securityManager = SecurityManagerReceivingInputs(Username, FullName, "Pepe123", "Pepe123");
+            IntroducingPasswords("Pepe123", "Pepe123");
 
-            _securityManager.CreateValidUser();
+            CreateUser();
 
-            AssertPrintedMessages("Password must be at least 8 characters in length");
+            VerifyNotifiedMessages("Password must be at least 8 characters in length");
         }
 
         [Test]
         public void save_user()
         {
             var validPassword = "Pepe1234";
-            _securityManager = SecurityManagerReceivingInputs(Username, FullName, validPassword, validPassword);
+            IntroducingPasswords(validPassword, validPassword);
 
-            _securityManager.CreateValidUser();
+            CreateUser();
 
             var reversedPassword = "4321epeP";
-            AssertPrintedMessages($"Saving Details for User ({Username}, {FullName}, {reversedPassword})\n");
+            VerifyNotifiedMessages($"Saving Details for User ({Username}, {FullName}, {reversedPassword})\n");
         }
 
-
-        private static SecurityManagerForTesting SecurityManagerReceivingInputs(params string[] inputs)
+        private void CreateUser()
         {
-            var userInputs = new Queue<string>();
-            foreach (var input in inputs)
-            {
-                userInputs.Enqueue(input);
-            }
-
-            return new SecurityManagerForTesting(userInputs);
+            _securityManager.CreateValidUser();
         }
 
-        private void AssertPrintedMessages(string lastMessage)
+        private void IntroducingPasswords(string password, string confirmedPassword)
         {
-            Assert.That(_securityManager.PrintedMessage.Count, Is.EqualTo(5));
-            Assert.That(_securityManager.PrintedMessage, Is.EquivalentTo(new List<string>
-            {
-                "Enter a username",
-                "Enter your full name",
-                "Enter your password",
-                "Re-enter your password",
-                lastMessage
-            }));
-        }
-    }
-
-    public class SecurityManagerForTesting : SecurityManager
-    {
-        public List<string> PrintedMessage { get; init; }
-        private Queue<string> _userInput;
-
-        public SecurityManagerForTesting(Queue<string> userInput)
-        {
-            PrintedMessage = new List<string>();
-            _userInput = userInput;
+            _reader.Read().Returns(Username, FullName, password, confirmedPassword);
         }
 
-        protected override void Print(string message)
+        private void VerifyNotifiedMessages(string lastMessage)
         {
-            PrintedMessage.Add(message);
-        }
-
-        protected override string ReadUserInput()
-        {
-            return _userInput.Dequeue();
+            _notifier.Received(1).Notify("Enter a username");
+            _notifier.Received(1).Notify("Enter your full name");
+            _notifier.Received(1).Notify("Enter your password");
+            _notifier.Received(1).Notify("Re-enter your password");
+            _notifier.Received(1).Notify(lastMessage);
+            _notifier.Received(5).Notify(Arg.Any<string>());
         }
     }
 }
