@@ -1,6 +1,6 @@
 using System;
 
-namespace Hello;
+namespace Hello.infrastructure;
 
 public class ConsoleNotifier : Notifier
 {
