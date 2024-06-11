@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace StockBroker;
 
 public class StockBrokerClient
 {
+    private const char OrderSequenceSeparator = ',';
+    private const string OrderDataSeparator = " ";
     private readonly Notifier _notifier;
     private readonly DateProvider _dateProvider;
     private readonly StockBrokerOnlineService _stockBrokerOnlineService;
@@ -17,6 +21,8 @@ public class StockBrokerClient
 
     public void PlaceOrders(string ordersSequence)
     {
+        var amountPurchased = 0m;
+        var amountSelled = 0m;
         var processOrdersDate = _dateProvider.GetDate();
 
         if (string.IsNullOrEmpty(ordersSequence))
@@ -25,11 +31,23 @@ public class StockBrokerClient
             return;
         }
 
-        var orderSuccessfullyExecuted = _stockBrokerOnlineService.Execute(ordersSequence);
+        var splitOrders = ordersSequence.Split(OrderSequenceSeparator);
 
-        if (orderSuccessfullyExecuted)
+        foreach (var order in splitOrders)
         {
-            _notifier.Notify($"{processOrdersDate.ToString("d", new CultureInfo("en-US"))} Buy: € 248724.00, Sell: € 0.00");
+            var orderData = order.Split(OrderDataSeparator);
+            var orderQuantity = int.Parse(orderData[1]);
+            var orderValue = Convert.ToDecimal(orderData[2], new CultureInfo("en-US"));
+            var orderOperation = (OrderOperation)Enum.Parse(typeof(OrderOperation), orderData[^1]);
+            _stockBrokerOnlineService.Execute(ordersSequence);
+
+            if (orderOperation == OrderOperation.B)
+            {
+                amountPurchased += orderQuantity * orderValue;
+            }
         }
+
+        _notifier.Notify($"{processOrdersDate.ToString("d", new CultureInfo("en-US"))} " +
+                         $"Buy: € {amountPurchased.ToString("F")}, Sell: € 0,00");
     }
 }

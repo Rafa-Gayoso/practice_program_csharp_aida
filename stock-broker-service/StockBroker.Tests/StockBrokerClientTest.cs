@@ -43,7 +43,20 @@ namespace StockBroker.Tests
             _client.PlaceOrders(ordersSequence);
 
             _notifier.Received(1).Notify(Arg.Any<string>());
-            _notifier.Received(1).Notify($"{_date.ToString("d", new CultureInfo("en-US"))} Buy: € 248724.00, Sell: € 0.00");
+            _notifier.Received(1).Notify($"{_date.ToString("d", new CultureInfo("en-US"))} Buy: € 248724,00, Sell: € 0,00");
+        }
+
+        [Test]
+        public void notify_quantity_bought_for_multiple_order()
+        {
+            var ordersSequence = "GOOG 2 2.2 B,AAPL 5 10.5 B";
+            _dateProvider.GetDate().Returns(_date);
+            _stockBrokerOnlineService.Execute(ordersSequence).Returns(true);
+
+            _client.PlaceOrders(ordersSequence);
+
+            _notifier.Received(1).Notify(Arg.Any<string>());
+            _notifier.Received(1).Notify($"{_date.ToString("d", new CultureInfo("en-US"))} Buy: € 56,90, Sell: € 0,00");
         }
     }
 }
