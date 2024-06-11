@@ -7,11 +7,6 @@ public class HelloService
     private readonly Notifier _notifier;
     private readonly TimeProvider _timeProvider;
 
-    public HelloService(Notifier notifier)
-    {
-        _notifier = notifier;
-    }
-
     public HelloService(Notifier notifier, TimeProvider timeProvider)
     {
         _notifier = notifier;
@@ -22,28 +17,44 @@ public class HelloService
     {
         var time = _timeProvider.GetTimeOfTheDay();
 
-        if (IsMorningTime(time))
+        if (Morning().Contains(time))
         {
             _notifier.Notify("Buenos dias!");
-            return;
         }
-
-        if (IsEveningTime(time))
+        else if (Evening().Contains(time))
         {
             _notifier.Notify("Buenas tardes!");
-            return;
         }
-
-        _notifier.Notify("Buenas noches!");
+        else
+        {
+            _notifier.Notify("Buenas noches!");
+        }
     }
 
-    private bool IsMorningTime(TimeOnly time)
+    private static TimeInterval Morning()
     {
-        return time.IsBetween(new TimeOnly(6,0), new TimeOnly(12,0));
+        return new TimeInterval(new TimeOnly(6, 0), new TimeOnly(12, 0));
     }
 
-    private bool IsEveningTime(TimeOnly time)
+    private static TimeInterval Evening()
     {
-        return time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0));
+        return new TimeInterval(new TimeOnly(12, 1), new TimeOnly(20, 0));
+    }
+}
+
+public class TimeInterval
+{
+    private readonly TimeOnly _from;
+    private readonly TimeOnly _to;
+
+    public TimeInterval(TimeOnly from, TimeOnly to)
+    {
+        _from = from;
+        _to = to;
+    }
+
+    public bool Contains(TimeOnly time)
+    {
+        return time.IsBetween(_from, _to);
     }
 }
