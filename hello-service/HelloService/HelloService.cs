@@ -20,7 +20,7 @@ public class HelloService
 
     public void Hello()
     {
-        var time = _timeProvider.GetTime();
+        var time = _timeProvider.GetTimeOfTheDay();
 
         if (IsMorningTime(time))
         {
@@ -37,13 +37,13 @@ public class HelloService
         _notifier.Notify("Buenas noches!");
     }
 
-    private bool IsEveningTime(TimeOnly time)
-    {
-        return time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0));
-    }
-
     private bool IsMorningTime(TimeOnly time)
     {
         return time.IsBetween(new TimeOnly(6,0), new TimeOnly(12,0));
+    }
+
+    private bool IsEveningTime(TimeOnly time)
+    {
+        return time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0));
     }
 }

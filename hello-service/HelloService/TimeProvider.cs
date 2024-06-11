@@ -4,5 +4,5 @@ namespace Hello;
 
 public interface TimeProvider
 {
-    TimeOnly GetTime();
+    TimeOnly GetTimeOfTheDay();
 }

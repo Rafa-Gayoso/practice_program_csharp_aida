@@ -30,7 +30,7 @@ namespace Hello.Tests
         [TestCase(11, 59)]
         public void greet_with_good_morning(int hour, int minutes)
         {
-            _dateProvider.GetTime().Returns(new TimeOnly(hour, minutes));
+            _dateProvider.GetTimeOfTheDay().Returns(new TimeOnly(hour, minutes));
 
             _service.Hello();
 
@@ -42,7 +42,7 @@ namespace Hello.Tests
         [TestCase(19, 59)]
         public void greet_with_good_evening(int hour, int minutes)
         {
-            _dateProvider.GetTime().Returns(new TimeOnly(hour, minutes));
+            _dateProvider.GetTimeOfTheDay().Returns(new TimeOnly(hour, minutes));
 
             _service.Hello();
 
