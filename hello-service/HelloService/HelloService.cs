@@ -22,18 +22,28 @@ public class HelloService
     {
         var time = _timeProvider.GetTime();
 
-        if (time.IsBetween(new TimeOnly(6,0), new TimeOnly(12,0)))
+        if (IsMorningTime(time))
         {
             _notifier.Notify("Buenos dias!");
             return;
         }
 
-        if (time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0)))
+        if (IsEveningTime(time))
         {
             _notifier.Notify("Buenas tardes!");
             return;
         }
 
         _notifier.Notify("Buenas noches!");
+    }
+
+    private bool IsEveningTime(TimeOnly time)
+    {
+        return time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0));
+    }
+
+    private bool IsMorningTime(TimeOnly time)
+    {
+        return time.IsBetween(new TimeOnly(6,0), new TimeOnly(12,0));
     }
 }
