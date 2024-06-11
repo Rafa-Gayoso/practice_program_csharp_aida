@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -27,8 +28,7 @@ namespace Hello.Tests
 
             _service.Hello();
 
-            _notifier.Received(1).Notify(Arg.Any<string>());
-            _notifier.Received(1).Notify("Buenas noches!");
+            AssertMessage("Buenas noches!");
         }
 
         [TestCase(6,0)]
@@ -40,8 +40,7 @@ namespace Hello.Tests
 
             _service.Hello();
 
-            _notifier.Received(1).Notify(Arg.Any<string>());
-            _notifier.Received(1).Notify("Buenos dias!");
+            AssertMessage("Buenos dias!");
         }
 
         [TestCase(12, 1)]
@@ -53,8 +52,13 @@ namespace Hello.Tests
 
             _service.Hello();
 
+            AssertMessage("Buenas tardes!");
+        }
+
+        private void AssertMessage(string message)
+        {
             _notifier.Received(1).Notify(Arg.Any<string>());
-            _notifier.Received(1).Notify("Buenas tardes!");
+            _notifier.Received(1).Notify(message);
         }
     }
 }
