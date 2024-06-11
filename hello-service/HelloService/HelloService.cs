@@ -21,10 +21,19 @@ public class HelloService
     public void Hello()
     {
         var time = _timeProvider.GetTime();
-        if (time.IsBetween(new TimeOnly(6,0,0),new TimeOnly(12,0,0)))
+
+        if (time.IsBetween(new TimeOnly(6,0), new TimeOnly(12,0)))
         {
             _notifier.Notify("Buenos dias!");
+            return;
         }
+
+        if (time.IsBetween(new TimeOnly(12, 1), new TimeOnly(20, 0)))
+        {
+            _notifier.Notify("Buenas tardes!");
+            return;
+        }
+
         _notifier.Notify("Buenas noches!");
     }
 }

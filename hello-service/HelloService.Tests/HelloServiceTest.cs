@@ -25,14 +25,25 @@ namespace Hello.Tests
             _notifier.Received(1).Notify("Buenas noches!");
         }
 
+
         [Test]
         public void greet_with_good_morning()
         {
-            _dateProvider.GetTime().Returns(new TimeOnly(8, 0, 0));
+            _dateProvider.GetTime().Returns(new TimeOnly(8, 0));
 
             _service.Hello();
 
             _notifier.Received(1).Notify("Buenos dias!");
+        }
+
+        [Test]
+        public void greet_with_good_evening()
+        {
+            _dateProvider.GetTime().Returns(new TimeOnly(13, 0, 0));
+
+            _service.Hello();
+
+            _notifier.Received(1).Notify("Buenas tardes!");
         }
     }
 }
