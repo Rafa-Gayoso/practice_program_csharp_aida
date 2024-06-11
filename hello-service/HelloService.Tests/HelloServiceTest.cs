@@ -7,6 +7,7 @@ namespace Hello.Tests
     {
         private Notifier _notifier;
         private TimeProvider _dateProvider;
+
         private HelloService _service;
 
         [SetUp]
@@ -17,11 +18,16 @@ namespace Hello.Tests
             _service = new HelloService(_notifier, _dateProvider);
         }
 
-        [Test]
-        public void greet_with_good_night()
+        [TestCase(20, 0)]
+        [TestCase(0, 0)]
+        [TestCase(5, 59)]
+        public void greet_with_good_night(int hour, int minutes)
         {
+            _dateProvider.GetTimeOfTheDay().Returns(new TimeOnly(hour, minutes));
+
             _service.Hello();
 
+            _notifier.Received(1).Notify(Arg.Any<string>());
             _notifier.Received(1).Notify("Buenas noches!");
         }
 
@@ -34,6 +40,7 @@ namespace Hello.Tests
 
             _service.Hello();
 
+            _notifier.Received(1).Notify(Arg.Any<string>());
             _notifier.Received(1).Notify("Buenos dias!");
         }
 
@@ -46,6 +53,7 @@ namespace Hello.Tests
 
             _service.Hello();
 
+            _notifier.Received(1).Notify(Arg.Any<string>());
             _notifier.Received(1).Notify("Buenas tardes!");
         }
     }
