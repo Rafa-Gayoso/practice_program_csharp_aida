@@ -15,20 +15,25 @@ public class HelloService
 
     public void Hello()
     {
+        _notifier.Notify(Greet());
+    }
+
+    private string Greet()
+    {
         var time = _timeProvider.GetTimeOfTheDay();
+
+        var message = "Buenas noches!";
 
         if (Morning().Contains(time))
         {
-            _notifier.Notify("Buenos dias!");
+            message = "Buenos dias!";
         }
         else if (Evening().Contains(time))
         {
-            _notifier.Notify("Buenas tardes!");
+            message = "Buenas tardes!";
         }
-        else
-        {
-            _notifier.Notify("Buenas noches!");
-        }
+
+        return message;
     }
 
     private static TimeInterval Morning()
