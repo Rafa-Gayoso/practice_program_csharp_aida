@@ -2,6 +2,6 @@
 {
     public interface Presenter
     {
-        void Present(OrderSummary orderSummary);
+        void Present(OrdersSummary ordersSummary);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace StockBroker
 {
-    public record OrderSummary
+    public record OrdersSummary
     {
         private readonly decimal _boughtAmount;
         private readonly decimal _soldAmount;
         private readonly DateOnly _orderDate;
 
-        public OrderSummary(DateOnly orderDate, decimal boughtAmount, decimal soldAmount)
+        public OrdersSummary(DateOnly orderDate, decimal boughtAmount, decimal soldAmount)
         {
             _orderDate = orderDate;
             _boughtAmount = boughtAmount;

@@ -25,55 +25,49 @@ namespace StockBroker.Tests
         }
 
         [Test]
-        public void notify_not_buy_or_sell_orders()
+        public void place_an_empty_order_sequence()
         {
-            _client = new StockBrokerClient(_presenter, _calendar, _stockBrokerOnlineService);
             _calendar.GetDate().Returns(_date);
 
             _client.PlaceOrders(string.Empty);
 
-            _presenter.Received(1).Present(Arg.Any<OrderSummary>());
-            _presenter.Received(1).Present(new OrderSummary(_date, 0m, 0m));
+            PresenterReceived(new OrdersSummary(_date, 0m, 0m));
         }
 
         [Test]
-        public void notify_quantity_bought_for_a_single_order()
+        public void place_a_single_buy_order_of_several_stocks()
         {
-            var ordersSequence = "GOOG 300 829.08 B";
             _calendar.GetDate().Returns(_date);
-            _stockBrokerOnlineService.Execute(ordersSequence).Returns(true);
 
-            _client.PlaceOrders(ordersSequence);
+            _client.PlaceOrders("GOOG 300 829.08 B");
 
-            _presenter.Received(1).Present(Arg.Any<OrderSummary>());
-            _presenter.Received(1).Present(new OrderSummary(_date, 248724.00m, 0m));
+            PresenterReceived(new OrdersSummary(_date, 248724.00m, 0m));
         }
 
         [Test]
-        public void notify_quantity_bought_for_multiple_order()
+        public void place_a_multiple_buy_order_of_several_stocks()
         {
-            var ordersSequence = "GOOG 2 2.2 B,AAPL 5 10.5 B";
             _calendar.GetDate().Returns(_date);
-            _stockBrokerOnlineService.Execute(ordersSequence).Returns(true);
 
-            _client.PlaceOrders(ordersSequence);
+            _client.PlaceOrders("GOOG 2 2.2 B,AAPL 5 10.5 B");
 
-            _presenter.Received(1).Present(Arg.Any<OrderSummary>());
-            _presenter.Received(1).Present(new OrderSummary(_date, 56.90m, 0m));
+            PresenterReceived(new OrdersSummary(_date, 56.90m, 0m));
         }
 
         [Test]
-        public void notify_quantity_selled_for_a_single_order()
+        public void place_a_single_sell_order_of_several_stocks()
         {
-            var ordersSequence = "GOOG 2 2.2 S";
             _calendar.GetDate().Returns(_date);
-            _stockBrokerOnlineService.Execute(ordersSequence).Returns(true);
 
-            _client.PlaceOrders(ordersSequence);
+            _client.PlaceOrders("GOOG 2 2.2 S");
 
+            PresenterReceived(new OrdersSummary(_date, 0m, 4.40m));
+        }
 
-            _presenter.Received(1).Present(Arg.Any<OrderSummary>());
-            _presenter.Received(1).Present(new OrderSummary(_date, 0m, 4.40m));
+        private void PresenterReceived(OrdersSummary receivedOrderSummary)
+        {
+            _presenter.Received(1).Present(Arg.Any<OrdersSummary>());
+            _presenter.Received(1).Present(receivedOrderSummary);
         }
     }
 }

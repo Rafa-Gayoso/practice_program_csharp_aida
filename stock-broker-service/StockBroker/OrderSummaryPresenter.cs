@@ -11,11 +11,11 @@
             _formatter = new Formatter();
         }
 
-        public void Present(OrderSummary orderSummary)
+        public void Present(OrdersSummary ordersSummary)
         {
-            _notifier.Notify($"{orderSummary.Date()} Buy: € " +
-                             $"{_formatter.FormatAmount(orderSummary.BoughtAmount())}, " +
-                             $"Sell: € {_formatter.FormatAmount(orderSummary.SoldAmount())}");
+            _notifier.Notify($"{ordersSummary.Date()} Buy: € " +
+                             $"{_formatter.FormatAmount(ordersSummary.BoughtAmount())}, " +
+                             $"Sell: € {_formatter.FormatAmount(ordersSummary.SoldAmount())}");
         }
     }
 }

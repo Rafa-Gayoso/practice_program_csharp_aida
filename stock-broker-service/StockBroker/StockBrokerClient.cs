@@ -34,7 +34,6 @@ public class StockBrokerClient
         }
         
         var splitOrders = ordersSequence.Split(OrderSequenceSeparator);
-        _stockBrokerOnlineService.Execute(ordersSequence);
 
         foreach (var order in splitOrders)
         {
@@ -53,8 +52,8 @@ public class StockBrokerClient
         _presenter.Present(CreateOrderSummary(processOrdersDate, amountPurchased, amountSold));
     }
 
-    private static OrderSummary CreateOrderSummary(DateOnly processOrdersDate, decimal boughtAmount, decimal soldAmount)
+    private static OrdersSummary CreateOrderSummary(DateOnly processOrdersDate, decimal boughtAmount, decimal soldAmount)
     {
-        return new OrderSummary(processOrdersDate, boughtAmount, soldAmount);
+        return new OrdersSummary(processOrdersDate, boughtAmount, soldAmount);
     }
 }
