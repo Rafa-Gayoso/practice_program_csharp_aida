@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace StockBroker;
@@ -23,15 +24,14 @@ public class StockBrokerClient
     {
         
         var processOrdersDate = _calendar.GetDate();
+        var amountPurchased = 0m;
+        var amountSold = 0m;
 
         if (string.IsNullOrEmpty(ordersSequence))
         {
-            _presenter.Present(new OrderSummary(_calendar.GetDate(), 0m, 0m));
+            _presenter.Present(CreateOrderSummary(processOrdersDate, 0m, 0m));
             return;
         }
-
-        var amountPurchased = 0m;
-        var amountSold = 0m;
         
         var splitOrders = ordersSequence.Split(OrderSequenceSeparator);
         _stockBrokerOnlineService.Execute(ordersSequence);
@@ -50,6 +50,11 @@ public class StockBrokerClient
             }
         }
 
-        _presenter.Present(new OrderSummary(_calendar.GetDate(), amountPurchased, amountSold));
+        _presenter.Present(CreateOrderSummary(processOrdersDate, amountPurchased, amountSold));
+    }
+
+    private static OrderSummary CreateOrderSummary(DateOnly processOrdersDate, decimal boughtAmount, decimal soldAmount)
+    {
+        return new OrderSummary(processOrdersDate, boughtAmount, soldAmount);
     }
 }
