@@ -24,5 +24,10 @@ namespace StockBroker
         {
             return _boughtAmount;
         }
+
+        public decimal SoldAmount()
+        {
+            return _soldAmount;
+        }
     }
 }

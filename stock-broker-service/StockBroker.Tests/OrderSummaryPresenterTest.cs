@@ -29,5 +29,16 @@ namespace StockBroker.Tests
 
             notifier.Received(1).Notify($"{orderDate} Buy: € 59.60, Sell: € 0.00");
         }
+        [Test]
+        public void print_orders_summary_with_stock_sold()
+        {
+            var notifier = Substitute.For<Notifier>();
+            Presenter presenter = new OrderSummaryPresenter(notifier);
+            var orderDate = new DateOnly(2024, 6, 12);
+
+            presenter.Present(new OrderSummary(orderDate, 0m, 12.5m));
+
+            notifier.Received(1).Notify($"{orderDate} Buy: € 0.00, Sell: € 12.50");
+        }
     }
 }
