@@ -6,15 +6,15 @@ public class StockBrokerClient
 {
     private const char OrderSequenceSeparator = ',';
 
-    private readonly Notifier _notifier;
-    private readonly DateProvider _dateProvider;
+    private readonly Calendar _calendar;
     private readonly StockBrokerOnlineService _stockBrokerOnlineService;
     private readonly OrderCreator _orderCreator;
+    private readonly Presenter _presenter;
 
-    public StockBrokerClient(Notifier notifier, DateProvider dateProvider, StockBrokerOnlineService stockBrokerOnlineService)
+    public StockBrokerClient(Presenter presenter, Calendar calendar, StockBrokerOnlineService stockBrokerOnlineService)
     {
-        _notifier = notifier;
-        _dateProvider = dateProvider;
+        _presenter = presenter;
+        _calendar = calendar;
         _stockBrokerOnlineService = stockBrokerOnlineService;
         _orderCreator = new OrderCreator();
     }
@@ -22,11 +22,11 @@ public class StockBrokerClient
     public void PlaceOrders(string ordersSequence)
     {
         
-        var processOrdersDate = _dateProvider.GetDate();
+        var processOrdersDate = _calendar.GetDate();
 
         if (string.IsNullOrEmpty(ordersSequence))
         {
-            _notifier.Notify($"{processOrdersDate.ToString("d", new CultureInfo("en-US"))} Buy: € 0.00, Sell: € 0.00");
+            _presenter.Present(new OrderSummary(_calendar.GetDate(), 0m, 0m));
             return;
         }
 
@@ -50,12 +50,6 @@ public class StockBrokerClient
             }
         }
 
-        _notifier.Notify($"{processOrdersDate.ToString("d", new CultureInfo("en-US"))} " +
-                         $"Buy: € {FormatAmount(amountPurchased)}, Sell: € {FormatAmount(amountSold)}");
-    }
-
-    private static string FormatAmount(decimal amount)
-    {
-        return amount.ToString("F");
+        _presenter.Present(new OrderSummary(_calendar.GetDate(), amountPurchased, amountSold));
     }
 }

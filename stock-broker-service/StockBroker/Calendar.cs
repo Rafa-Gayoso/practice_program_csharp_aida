@@ -2,7 +2,7 @@ using System;
 
 namespace StockBroker;
 
-public interface DateProvider
+public interface Calendar
 {
     DateOnly GetDate();
 }
