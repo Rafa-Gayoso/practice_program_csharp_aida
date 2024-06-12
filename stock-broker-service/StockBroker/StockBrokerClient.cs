@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace StockBroker;
@@ -7,22 +5,23 @@ namespace StockBroker;
 public class StockBrokerClient
 {
     private const char OrderSequenceSeparator = ',';
-    private const string OrderDataSeparator = " ";
+
     private readonly Notifier _notifier;
     private readonly DateProvider _dateProvider;
     private readonly StockBrokerOnlineService _stockBrokerOnlineService;
+    private readonly OrderCreator _orderCreator;
 
     public StockBrokerClient(Notifier notifier, DateProvider dateProvider, StockBrokerOnlineService stockBrokerOnlineService)
     {
         _notifier = notifier;
         _dateProvider = dateProvider;
         _stockBrokerOnlineService = stockBrokerOnlineService;
+        _orderCreator = new OrderCreator();
     }
 
     public void PlaceOrders(string ordersSequence)
     {
-        var amountPurchased = 0m;
-        var amountSelled = 0m;
+        
         var processOrdersDate = _dateProvider.GetDate();
 
         if (string.IsNullOrEmpty(ordersSequence))
@@ -31,23 +30,32 @@ public class StockBrokerClient
             return;
         }
 
+        var amountPurchased = 0m;
+        var amountSold = 0m;
+        
         var splitOrders = ordersSequence.Split(OrderSequenceSeparator);
+        _stockBrokerOnlineService.Execute(ordersSequence);
 
         foreach (var order in splitOrders)
         {
-            var orderData = order.Split(OrderDataSeparator);
-            var orderQuantity = int.Parse(orderData[1]);
-            var orderValue = Convert.ToDecimal(orderData[2], new CultureInfo("en-US"));
-            var orderOperation = (OrderOperation)Enum.Parse(typeof(OrderOperation), orderData[^1]);
-            _stockBrokerOnlineService.Execute(ordersSequence);
+            var parsedOrder = _orderCreator.Create(order);
 
-            if (orderOperation == OrderOperation.B)
+            if (parsedOrder.Operation == OrderOperation.B)
             {
-                amountPurchased += orderQuantity * orderValue;
+                amountPurchased += parsedOrder.CalculateOrderAmount();
+            }
+            else
+            {
+                amountSold += parsedOrder.CalculateOrderAmount();
             }
         }
 
         _notifier.Notify($"{processOrdersDate.ToString("d", new CultureInfo("en-US"))} " +
-                         $"Buy: € {amountPurchased.ToString("F")}, Sell: € 0,00");
+                         $"Buy: € {FormatAmount(amountPurchased)}, Sell: € {FormatAmount(amountSold)}");
+    }
+
+    private static string FormatAmount(decimal amount)
+    {
+        return amount.ToString("F");
     }
 }
